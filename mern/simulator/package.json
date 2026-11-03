@@ -1,0 +1,19 @@
+{
+  "name": "upi-offline-mesh-simulator",
+  "version": "1.0.0",
+  "description": "Node.js Mesh Simulator for UPI Offline Payments",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "scenario:normal": "node src/index.js --scenario=normal",
+    "scenario:duplicate": "node src/index.js --scenario=duplicate",
+    "scenario:tampered": "node src/index.js --scenario=tampered",
+    "scenario:replay": "node src/index.js --scenario=replay",
+    "scenario:velocity": "node src/index.js --scenario=velocity"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ws": "^8.18.0"
+  }
+}
