@@ -1,0 +1,11 @@
+run,seed,mode,deliveryRate,delivered,dropped,tampered,overhead,deliveryTimeMs
+0,1,flood,1.00,4,2,1,5.75,2700
+0,1,trust-aware,1.00,2,2,1,10.50,2700
+1,1001,flood,1.00,2,1,1,10.00,2400
+1,1001,trust-aware,1.00,4,1,1,6.25,2100
+2,2001,flood,1.00,3,2,1,5.67,2100
+2,2001,trust-aware,1.00,3,1,1,7.33,2400
+3,3001,flood,1.00,3,3,1,6.67,2100
+3,3001,trust-aware,1.00,2,4,1,8.00,2400
+4,4001,flood,1.00,3,3,1,6.33,2100
+4,4001,trust-aware,1.00,3,2,1,6.33,2400

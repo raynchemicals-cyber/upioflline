@@ -9,32 +9,32 @@
       3
     ],
     "finalSnapshot": {
+      "node-2": {
+        "score": 77.3,
+        "classification": "HONEST"
+      },
       "node-0": {
-        "score": 65.6,
+        "score": 64.25,
         "classification": "UNRELIABLE"
       },
       "node-1": {
-        "score": 77.9,
-        "classification": "HONEST"
-      },
-      "node-2": {
-        "score": 78.65,
-        "classification": "HONEST"
-      },
-      "node-3": {
-        "score": 81.35,
-        "classification": "HONEST"
-      },
-      "node-4": {
-        "score": 86,
-        "classification": "HONEST"
-      },
-      "node-5": {
-        "score": 80.9,
+        "score": 76.55,
         "classification": "HONEST"
       },
       "src": {
         "score": 80,
+        "classification": "HONEST"
+      },
+      "node-3": {
+        "score": 80.45,
+        "classification": "HONEST"
+      },
+      "node-4": {
+        "score": 82.4,
+        "classification": "HONEST"
+      },
+      "node-5": {
+        "score": 80.45,
         "classification": "HONEST"
       },
       "node-6": {
@@ -53,7 +53,7 @@
     "fraud": {
       "riskScore": 27,
       "isFlagged": true,
-      "minTrust": 65.60000000000001,
+      "minTrust": 64.25,
       "offendingNode": "node-0"
     }
   },
@@ -126,27 +126,27 @@
     ],
     "finalSnapshot": {
       "node-2": {
-        "score": 82.55,
+        "score": 79.85,
         "classification": "HONEST"
       },
       "node-3": {
-        "score": 82.25,
+        "score": 80.9,
         "classification": "HONEST"
       },
       "node-4": {
-        "score": 93.2,
+        "score": 86,
         "classification": "HONEST"
       },
       "node-5": {
-        "score": 82.7,
+        "score": 81.35,
         "classification": "HONEST"
       },
       "node-0": {
-        "score": 66.95,
+        "score": 64.25,
         "classification": "UNRELIABLE"
       },
       "node-1": {
-        "score": 80.45,
+        "score": 77.75,
         "classification": "HONEST"
       },
       "src": {
@@ -169,7 +169,7 @@
     "fraud": {
       "riskScore": 27,
       "isFlagged": true,
-      "minTrust": 66.95,
+      "minTrust": 64.25,
       "offendingNode": "node-0"
     }
   },
@@ -184,27 +184,27 @@
     ],
     "finalSnapshot": {
       "node-2": {
-        "score": 80.75,
+        "score": 79.4,
         "classification": "HONEST"
       },
       "node-3": {
-        "score": 81.8,
+        "score": 80.9,
         "classification": "HONEST"
       },
       "node-4": {
-        "score": 88.4,
+        "score": 84.8,
         "classification": "HONEST"
       },
       "node-5": {
-        "score": 81.35,
+        "score": 80.9,
         "classification": "HONEST"
       },
       "node-1": {
-        "score": 77.9,
+        "score": 76.55,
         "classification": "HONEST"
       },
       "node-0": {
-        "score": 65.6,
+        "score": 64.25,
         "classification": "UNRELIABLE"
       },
       "src": {
@@ -227,7 +227,7 @@
     "fraud": {
       "riskScore": 27,
       "isFlagged": true,
-      "minTrust": 65.60000000000001,
+      "minTrust": 64.25,
       "offendingNode": "node-0"
     }
   },

@@ -2,6 +2,7 @@ import { decrypt, hashCiphertext } from '../utils/crypto.js';
 import { idempotencyService }   from './idempotencyService.js';
 import { settlementService }    from './settlementService.js';
 import { riskScoringService }   from './riskScoringService.js';
+import { metricsService }       from './metricsService.js';
 import { FlaggedPayment }       from '../models/FlaggedPayment.js';
 
 /**
@@ -63,6 +64,7 @@ export class BridgeIngestionService {
 
       // ── 1. Idempotency Gate ──────────────────────────────────────────────
       if (!idempotencyService.claim(packetHash)) {
+        metricsService.recordDuplicate();
         console.log(
           `DUPLICATE packet ${packetHash.substring(0, 12)}... from bridge ${bridgeNodeId} - dropped`
         );
@@ -79,6 +81,7 @@ export class BridgeIngestionService {
       try {
         instruction = decrypt(packet.ciphertext);
       } catch (err) {
+        metricsService.recordTampered();
         console.warn(
           `Decryption failed for packet ${packetHash.substring(0, 12)}...: ${err.message}`
         );
@@ -99,6 +102,7 @@ export class BridgeIngestionService {
       const ageSeconds = (Date.now() - signedAt) / 1000;
 
       if (ageSeconds > this.maxAgeSeconds) {
+        metricsService.recordStale();
         console.warn(`Packet ${packetHash.substring(0, 12)}... too old (${ageSeconds}s), rejected`);
         return {
           outcome:       'INVALID',
@@ -109,6 +113,7 @@ export class BridgeIngestionService {
       }
 
       if (ageSeconds < -300) {
+        metricsService.recordStale();
         console.warn(`Packet ${packetHash.substring(0, 12)}... future-dated, rejected`);
         return {
           outcome:       'INVALID',
@@ -162,6 +167,12 @@ export class BridgeIngestionService {
 
       // ── 5. Atomic Settlement ─────────────────────────────────────────────
       const tx = await settlementService.settle(instruction, packetHash, bridgeNodeId, hopCount);
+
+      if (tx.status !== 'REJECTED') {
+        metricsService.recordDelivered({ hopCount });
+      } else {
+        metricsService.recordDropped();
+      }
 
       // Reward every node on the successful path
       await this._rewardPath(bridgeNodeId, relayNodes);

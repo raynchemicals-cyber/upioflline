@@ -7,7 +7,7 @@
       "fraud": {
         "riskScore": 0,
         "isFlagged": false,
-        "minTrust": 75.65,
+        "minTrust": 74.75,
         "offendingNode": "node-0"
       }
     },
@@ -18,7 +18,7 @@
       "fraud": {
         "riskScore": 0,
         "isFlagged": false,
-        "minTrust": 75.65,
+        "minTrust": 74.75,
         "offendingNode": "node-0"
       }
     },
@@ -29,7 +29,7 @@
       "fraud": {
         "riskScore": 0,
         "isFlagged": false,
-        "minTrust": 75.65,
+        "minTrust": 74.75,
         "offendingNode": "node-0"
       }
     },
@@ -40,7 +40,7 @@
       "fraud": {
         "riskScore": 0,
         "isFlagged": false,
-        "minTrust": 75.65,
+        "minTrust": 74.75,
         "offendingNode": "node-0"
       }
     },
@@ -51,7 +51,7 @@
       "fraud": {
         "riskScore": 0,
         "isFlagged": false,
-        "minTrust": 75.65,
+        "minTrust": 74.75,
         "offendingNode": "node-0"
       }
     }

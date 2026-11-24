@@ -273,7 +273,55 @@ This implementation is an educational and architectural proof of concept. The fo
 | Unreserved offline balances | Hardware-backed offline wallets (like UPI Lite) with pre-funded offline balance reserves to prevent double-spending. |
 | Unauthenticated `/api/bridge/ingest` | Mutual TLS (mTLS) with device attestation certificates (Play Integrity API / SafetyNet). |
 
-### Simulator-specific shortcuts ("not real" in the mesh layer)
+### Trust Architecture: Simulator vs. Backend Single Source of Truth
+
+The simulator and the backend maintain distinct trust score implementations by architectural design:
+- **Mesh Simulator Trust (`TrustManager`):** An in-memory, decentralized trust manager running on each mesh node. It drives next-hop peer routing decisions, path pruning, and $\epsilon$-greedy exploration without requiring internet connectivity or server roundtrips.
+- **Backend Bridge Trust (`RelayNode.trustScore` in MongoDB):** A persistent database record updated during bridge ingestion. It feeds the AI Risk Scoring Engine and Isolation Forest to flag suspicious payments before settlement.
+
+These two stores model their respective real-world layers: edge device decentralized routing decisions vs. core banking backend risk evaluation.
+
+### Running Experiments and Generating Reports
+
+```bash
+# 1. Run all seeded simulation benchmarks (Exp A - Exp F)
+cd mern/simulator
+npm run experiments
+
+# 2. Output files generated in mern/simulator/results and /results:
+#    - exp_a.json, exp_a.csv (Trust evolution)
+#    - exp_b.json, exp_b.csv (Flood vs Trust-aware)
+#    - exp_c.json, exp_c.csv (Drop rate sweep)
+#    - exp_d.json, exp_d.csv (Relay density sweep 5-30)
+#    - exp_e.json, exp_e.csv (Security rejections: tamper, replay, duplicate)
+#    - exp_f.json, exp_f.csv (Oracle-free blame attribution)
+#    - summary.json
+
+# 3. Generate updated RESULTS.md from empirical results:
+node src/generateResultsDoc.js
+```
+
+### Running Tests
+
+```bash
+# Run server unit tests (crypto, trust, routing, metrics):
+cd mern/server
+npm test
+```
+
+### Running the Dashboard
+
+```bash
+# Terminal 1: Backend server
+cd mern/server
+npm run dev
+
+# Terminal 2: React Dashboard
+cd mern/client
+npm run dev
+```
+
+### What's not real (Architectural disclaimers)
 
 | Simulator Behaviour | Why it is a shortcut | Real-world equivalent |
 |---|---|---|

@@ -11,7 +11,7 @@
     "scenario:tampered": "node src/index.js --scenario=tampered",
     "scenario:replay": "node src/index.js --scenario=replay",
     "scenario:velocity": "node src/index.js --scenario=velocity",
-    "experiments": "node src/experiments.js"
+    "experiments": "node src/experiments.js && node src/generateResultsDoc.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

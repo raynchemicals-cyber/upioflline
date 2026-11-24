@@ -1,0 +1,290 @@
+[
+  {
+    "dropRate": 0,
+    "avgDeliveryRate": 1,
+    "avgDropped": 0,
+    "runs": [
+      {
+        "seed": 2,
+        "run": 0,
+        "delivered": 4,
+        "dropped": 0,
+        "tampered": 0,
+        "hops": 26,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 6.75,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 1002,
+        "run": 1,
+        "delivered": 4,
+        "dropped": 0,
+        "tampered": 0,
+        "hops": 26,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 6.75,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 2002,
+        "run": 2,
+        "delivered": 4,
+        "dropped": 0,
+        "tampered": 0,
+        "hops": 26,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 6.75,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 3002,
+        "run": 3,
+        "delivered": 4,
+        "dropped": 0,
+        "tampered": 0,
+        "hops": 26,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 6.75,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 4002,
+        "run": 4,
+        "delivered": 4,
+        "dropped": 0,
+        "tampered": 0,
+        "hops": 26,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 6.75,
+        "fallbacks": 0,
+        "explores": 0
+      }
+    ]
+  },
+  {
+    "dropRate": 0.1,
+    "avgDeliveryRate": 1,
+    "avgDropped": 2.6,
+    "runs": [
+      {
+        "seed": 2,
+        "run": 0,
+        "delivered": 2,
+        "dropped": 3,
+        "tampered": 0,
+        "hops": 19,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 10,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 1002,
+        "run": 1,
+        "delivered": 4,
+        "dropped": 1,
+        "tampered": 0,
+        "hops": 24,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 6.25,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 2002,
+        "run": 2,
+        "delivered": 4,
+        "dropped": 3,
+        "tampered": 0,
+        "hops": 20,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 5.25,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 3002,
+        "run": 3,
+        "delivered": 4,
+        "dropped": 2,
+        "tampered": 0,
+        "hops": 23,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 6,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 4002,
+        "run": 4,
+        "delivered": 4,
+        "dropped": 4,
+        "tampered": 0,
+        "hops": 19,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 5,
+        "fallbacks": 0,
+        "explores": 0
+      }
+    ]
+  },
+  {
+    "dropRate": 0.3,
+    "avgDeliveryRate": 1,
+    "avgDropped": 3.2,
+    "runs": [
+      {
+        "seed": 2,
+        "run": 0,
+        "delivered": 2,
+        "dropped": 4,
+        "tampered": 0,
+        "hops": 14,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2100,
+        "overhead": 7.5,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 1002,
+        "run": 1,
+        "delivered": 1,
+        "dropped": 4,
+        "tampered": 0,
+        "hops": 10,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2400,
+        "overhead": 11,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 2002,
+        "run": 2,
+        "delivered": 1,
+        "dropped": 3,
+        "tampered": 0,
+        "hops": 9,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2700,
+        "overhead": 10,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 3002,
+        "run": 3,
+        "delivered": 1,
+        "dropped": 4,
+        "tampered": 0,
+        "hops": 11,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2400,
+        "overhead": 12,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 4002,
+        "run": 4,
+        "delivered": 2,
+        "dropped": 1,
+        "tampered": 0,
+        "hops": 9,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 1800,
+        "overhead": 5,
+        "fallbacks": 0,
+        "explores": 0
+      }
+    ]
+  },
+  {
+    "dropRate": 0.5,
+    "avgDeliveryRate": 0.2,
+    "avgDropped": 3.4,
+    "runs": [
+      {
+        "seed": 2,
+        "run": 0,
+        "delivered": 0,
+        "dropped": 4,
+        "tampered": 0,
+        "hops": 2,
+        "deliveryRate": 0,
+        "deliveryTimeMs": null,
+        "overhead": 3,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 1002,
+        "run": 1,
+        "delivered": 1,
+        "dropped": 4,
+        "tampered": 0,
+        "hops": 10,
+        "deliveryRate": 1,
+        "deliveryTimeMs": 2400,
+        "overhead": 11,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 2002,
+        "run": 2,
+        "delivered": 0,
+        "dropped": 3,
+        "tampered": 0,
+        "hops": 6,
+        "deliveryRate": 0,
+        "deliveryTimeMs": null,
+        "overhead": 7,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 3002,
+        "run": 3,
+        "delivered": 0,
+        "dropped": 4,
+        "tampered": 0,
+        "hops": 2,
+        "deliveryRate": 0,
+        "deliveryTimeMs": null,
+        "overhead": 3,
+        "fallbacks": 0,
+        "explores": 0
+      },
+      {
+        "seed": 4002,
+        "run": 4,
+        "delivered": 0,
+        "dropped": 2,
+        "tampered": 0,
+        "hops": 2,
+        "deliveryRate": 0,
+        "deliveryTimeMs": null,
+        "overhead": 3,
+        "fallbacks": 0,
+        "explores": 0
+      }
+    ]
+  }
+]

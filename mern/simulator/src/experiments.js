@@ -117,7 +117,9 @@ function buildTopology(nodeCount, profiles = [], dropRate = 0) {
   const relayCount     = nodeCount - 1;
 
   for (let i = 0; i < relayCount; i++) {
-    const hasInternet     = i % bridgeInterval === bridgeInterval - 1;
+    const hasInternet =
+      (i % bridgeInterval === bridgeInterval - 1) ||
+      (i === relayCount - 1 && !nodes.some((n) => n.hasInternet));
     const profile         = profiles[i] || 'honest';
     const nodeDropRate    = profile === 'unreliable' ? (dropRate || 0.30) : 0;
 
@@ -588,12 +590,13 @@ async function expE() {
 
 async function expF() {
   const expId = 'f';
-  console.log('\n══ Exp F: Oracle-Free Blame (uniform path penalty, 10 nodes, 1 malicious, 20 pkts) ══');
+  console.log('\n══ Exp F: Oracle-Free Blame (uniform path penalty, 10 nodes, 1 malicious, 200 pkts) ══');
 
   const results = [];
+  const PACKETS_PER_RUN = 200;
 
   for (let run = 0; run < RUNS_PER_EXP; run++) {
-    const seed         = run * 1000 + 5; // expIndex 5 → distinct from a–e
+    const seed         = run * 1000 + 5; // distinct seed per run
     const rng          = createSeededRng(seed);
     const clock        = new SimulatedClock();
     const trustManager = new TrustManager();
@@ -618,20 +621,29 @@ async function expF() {
       .map((n) => n.id);
 
     // ── Oracle-free blame: monkey-patch _applyTrustUpdates ──────────────────
-    // PACKET_TAMPERED event does NOT include the path (only rogueNode + packetId).
-    // To stay truly oracle-free we override the internal _applyTrustUpdates hook
-    // so that tampered paths get path_contaminated(-5) on EVERY node, including
-    // the actual tamperer (we do NOT use tampererNodeId for a heavier penalty).
-    net._applyTrustUpdates = function(sourceId, bridgeDeliveries, droppedHops, tamperedNodes) {
-      // 1. Reward successful deliveries normally
-      for (const delivery of bridgeDeliveries) {
-        for (const nodeId of delivery.path) {
-          if (nodeId === sourceId) continue;
-          trustManager.update(nodeId, 'forward_ok');
+    // End-to-end verification check:
+    // 1. Credit forward_ok ONLY when a packet verifies end-to-end (ciphertext matches).
+    // 2. On failed verification, penalise ALL relays on the path equally with path_contaminated (-5).
+    //    NO ground-truth identification of the rogue node; NO forward_ok for corrupt packets.
+    net._applyTrustUpdates = function(sourceId, bridgeDeliveries, droppedHops, tamperedNodes, originalCiphertext) {
+      for (const d of bridgeDeliveries) {
+        const isVerified = (originalCiphertext != null && d.packet.ciphertext === originalCiphertext);
+        if (isVerified) {
+          for (const nodeId of d.path) {
+            if (nodeId === sourceId) continue;
+            trustManager.update(nodeId, 'forward_ok');
+          }
+          trustManager.update(d.bridgeId, 'delivered');
+        } else {
+          // Failed end-to-end verification: uniform penalty on all relays along the contaminated path
+          for (const nodeId of d.path) {
+            if (nodeId === sourceId) continue;
+            trustManager.update(nodeId, 'path_contaminated');
+          }
         }
-        trustManager.update(delivery.bridgeId, 'delivered');
       }
-      // 2. Drop penalties normally
+
+      // Penalize drops normally
       const penalizedForDrops = new Set();
       for (const { from } of droppedHops) {
         if (!penalizedForDrops.has(from)) {
@@ -639,23 +651,18 @@ async function expF() {
           penalizedForDrops.add(from);
         }
       }
-      // 3. ORACLE-FREE: every node on a tampered path gets path_contaminated(-5) equally.
-      //    We deliberately do NOT use tampererNodeId for tamper(-35) — that is the oracle.
-      for (const { path } of tamperedNodes) {
-        for (const nodeId of path) {
-          if (nodeId === sourceId) continue;
-          trustManager.update(nodeId, 'path_contaminated');
-        }
-      }
+
       // Sync trustScore back into MeshNode for routing decisions
       for (const [id, node] of net.nodes.entries()) {
         node.trustScore = trustManager.getScore(id);
       }
     };
 
-    // Run 20 packets
-    for (let p = 0; p < 20; p++) {
-      await runTrial(net, clock, rng);
+    // Run 200 packets per run originating from source node 'src'
+    for (let p = 0; p < PACKETS_PER_RUN; p++) {
+      clock.reset(0);
+      const packet = makePacket(rng);
+      await net.propagatePacket('src', packet);
     }
 
     const snap           = trustManager.snapshot();
@@ -667,6 +674,33 @@ async function expF() {
     const minHonest = honestScores.length > 0 ? Math.min(...honestScores) : INITIAL_TRUST;
     const separated = maliciousScore < minHonest;
 
+    const perNodeTable = Object.fromEntries(
+      nodes.map((n) => [
+        n.id,
+        {
+          label: n.label,
+          profile: n.behaviourProfile,
+          hasInternet: n.hasInternet,
+          score: parseFloat((snap[n.id]?.score ?? INITIAL_TRUST).toFixed(2)),
+          classification: snap[n.id]?.classification ?? 'HONEST',
+        },
+      ])
+    );
+
+    if (run === 0) {
+      console.log('\n  Per-node trust table for Run 0:');
+      console.log('  -------------------------------------------------------------');
+      console.log('  Node ID   | Profile   | Internet | Trust Score | Classification');
+      console.log('  -------------------------------------------------------------');
+      for (const [id, info] of Object.entries(perNodeTable)) {
+        console.log(
+          `  ${id.padEnd(9)} | ${info.profile.padEnd(9)} | ${String(info.hasInternet).padEnd(8)} | ` +
+          `${info.score.toFixed(2).padStart(11)} | ${info.classification}`
+        );
+      }
+      console.log('  -------------------------------------------------------------');
+    }
+
     results.push({
       seed,
       run,
@@ -677,6 +711,7 @@ async function expF() {
       honestScores: Object.fromEntries(
         honestIds.map((id) => [id, parseFloat((snap[id]?.score ?? INITIAL_TRUST).toFixed(3))])
       ),
+      perNodeTable: run === 0 ? perNodeTable : undefined,
     });
 
     console.log(
@@ -690,8 +725,9 @@ async function expF() {
   console.log(`\n  Oracle-free blame: malicious separated from honest in ${sepCount}/${results.length} runs`);
   if (sepCount < results.length) {
     console.log(
-      '  ⚠  Uniform blame is insufficient to fully separate the malicious node in all runs.\n' +
-      '     This is expected: without ground truth, honest relays also absorb false blame.'
+      '  ⚠  Uniform blame causes innocent downstream relays (e.g., node-1) on the same path\n' +
+      '     as the malicious node to absorb false blame, so strict separation below ALL honest\n' +
+      '     nodes does not always occur, though the contaminated subpath isolates from honest nodes.'
     );
   }
 
@@ -715,20 +751,99 @@ async function main() {
   allResults.e = await expE();
   allResults.f = await expF();
 
-  // Write per-experiment JSON
+  // Write per-experiment JSON and CSV
+  const csvFiles = {};
+
+  // exp_a.csv
+  let csvA = 'run,seed,packets,minTrust,isFlagged,riskScore\n';
+  for (const r of allResults.a) {
+    csvA += `${r.run},${r.seed},${r.packets},${r.fraud.minTrust.toFixed(2)},${r.fraud.isFlagged},${r.fraud.riskScore}\n`;
+  }
+  csvFiles.a = csvA;
+
+  // exp_b.csv
+  let csvB = 'run,seed,mode,deliveryRate,delivered,dropped,tampered,overhead,deliveryTimeMs\n';
+  for (const r of allResults.b) {
+    csvB += `${r.run},${r.seed},flood,${r.flood.deliveryRate.toFixed(2)},${r.flood.delivered},${r.flood.dropped},${r.flood.tampered},${r.flood.overhead.toFixed(2)},${r.flood.deliveryTimeMs ?? 0}\n`;
+    csvB += `${r.run},${r.seed},trust-aware,${r.trustAware.deliveryRate.toFixed(2)},${r.trustAware.delivered},${r.trustAware.dropped},${r.trustAware.tampered},${r.trustAware.overhead.toFixed(2)},${r.trustAware.deliveryTimeMs ?? 0}\n`;
+  }
+  csvFiles.b = csvB;
+
+  // exp_c.csv
+  let csvC = 'dropRate,run,seed,deliveryRate,delivered,dropped,overhead\n';
+  for (const group of allResults.c) {
+    for (const r of group.runs) {
+      csvC += `${group.dropRate},${r.run},${r.seed},${r.deliveryRate.toFixed(2)},${r.delivered},${r.dropped},${r.overhead.toFixed(2)}\n`;
+    }
+  }
+  csvFiles.c = csvC;
+
+  // exp_d.csv
+  let csvD = 'nodeCount,run,seed,deliveryRate,hops,overhead,deliveryTimeMs\n';
+  for (const group of allResults.d) {
+    for (const r of group.runs) {
+      csvD += `${group.nodeCount},${r.run},${r.seed},${r.deliveryRate.toFixed(2)},${r.hops},${r.overhead.toFixed(2)},${r.deliveryTimeMs ?? 0}\n`;
+    }
+  }
+  csvFiles.d = csvD;
+
+  // exp_e.csv
+  let csvE = 'type,run,seed,tamperedCount,isFlagged,firstDeliveries,replayDeliveries,bothReached\n';
+  for (const r of allResults.e.tamper) {
+    csvE += `tamper,${r.run},${r.seed},${r.tamperedCount},${r.fraud.isFlagged},,,\n`;
+  }
+  for (const r of allResults.e.replay) {
+    csvE += `replay,${r.run},${r.seed},,,${r.firstDeliveries},${r.replayDeliveries},\n`;
+  }
+  for (const r of allResults.e.duplicate) {
+    csvE += `duplicate,${r.run},${r.seed},,,,${r.deliveriesFromSrc1},${r.bothReached}\n`;
+  }
+  csvFiles.e = csvE;
+
+  // exp_f.csv
+  let csvF = 'run,seed,maliciousId,maliciousScore,minHonestScore,separated\n';
+  for (const r of allResults.f) {
+    csvF += `${r.run},${r.seed},${r.maliciousId},${r.maliciousScore},${r.minHonestScore},${r.separated}\n`;
+  }
+  csvFiles.f = csvF;
+
+  // Target directories to mirror (simulator results, mern/results, and root results)
+  const targetDirs = [
+    RESULTS_DIR,
+    path.resolve(__dirname, '..', '..', 'results'),
+    path.resolve(__dirname, '..', '..', '..', 'results'),
+  ];
+
+  for (const dir of targetDirs) {
+    if (!fs.existsSync(dir)) {
+      try { fs.mkdirSync(dir, { recursive: true }); } catch {}
+    }
+  }
+
   for (const [id, data] of Object.entries(allResults)) {
-    const outPath = path.join(RESULTS_DIR, `exp_${id}.json`);
-    fs.writeFileSync(outPath, JSON.stringify(data, null, 2), 'utf8');
-    console.log(`\nWritten: ${outPath}`);
+    for (const dir of targetDirs) {
+      if (fs.existsSync(dir)) {
+        fs.writeFileSync(path.join(dir, `exp_${id}.json`), JSON.stringify(data, null, 2), 'utf8');
+        if (csvFiles[id]) {
+          fs.writeFileSync(path.join(dir, `exp_${id}.csv`), csvFiles[id], 'utf8');
+        }
+      }
+    }
+    console.log(`\nWritten: exp_${id}.json & exp_${id}.csv`);
   }
 
   // Write combined summary
-  const summaryPath = path.join(RESULTS_DIR, 'summary.json');
-  fs.writeFileSync(summaryPath, JSON.stringify({
+  const summaryPayload = JSON.stringify({
     generated: new Date().toISOString(),
     experiments: Object.keys(allResults),
     note: 'Seeds: a–e: runIndex*1000+expIndex (a=0…e=4); f: runIndex*1000+5',
-  }, null, 2), 'utf8');
+  }, null, 2);
+
+  for (const dir of targetDirs) {
+    if (fs.existsSync(dir)) {
+      fs.writeFileSync(path.join(dir, 'summary.json'), summaryPayload, 'utf8');
+    }
+  }
 
   console.log(`\n✅  Experiments complete. Results in: ${RESULTS_DIR}`);
 }

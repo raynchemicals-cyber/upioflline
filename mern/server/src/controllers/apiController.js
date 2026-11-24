@@ -1,11 +1,15 @@
+import fs from 'fs';
+import path from 'path';
 import { serverKeyHolder } from '../config/serverKeys.js';
 import { demoService } from '../services/demoService.js';
 import { meshSimulatorService } from '../services/meshSimulatorService.js';
 import { bridgeIngestionService } from '../services/bridgeIngestionService.js';
 import { idempotencyService } from '../services/idempotencyService.js';
+import { metricsService } from '../services/metricsService.js';
 import { Account } from '../models/Account.js';
 import { Transaction } from '../models/Transaction.js';
 import { FlaggedPayment } from '../models/FlaggedPayment.js';
+import { RelayNode } from '../models/RelayNode.js';
 
 export const apiController = {
   // ------------------------------------------------------------- Key
@@ -24,6 +28,7 @@ export const apiController = {
       const packet = demoService.createPacket(senderVpa, receiverVpa, amount, pin, ttl);
 
       meshSimulatorService.inject(startDevice, packet);
+      metricsService.recordSent();
 
       res.json({
         packetId: packet.packetId,
@@ -163,5 +168,82 @@ export const apiController = {
     } catch (err) {
       next(err);
     }
+  },
+
+  // ----------------------------------------------------------- Metrics
+  getMetrics(req, res) {
+    res.json(metricsService.getSnapshot());
+  },
+
+  getMetricsStream(req, res) {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
+    if (res.flushHeaders) res.flushHeaders();
+
+    // Send initial snapshot immediately
+    res.write(`data: ${JSON.stringify(metricsService.getSnapshot())}\n\n`);
+
+    const unsubscribe = metricsService.subscribe((snapshot) => {
+      try {
+        res.write(`data: ${JSON.stringify(snapshot)}\n\n`);
+      } catch {}
+    });
+
+    const heartbeat = setInterval(() => {
+      try {
+        res.write(': heartbeat\n\n');
+      } catch {}
+    }, 15000);
+
+    req.on('close', () => {
+      unsubscribe();
+      clearInterval(heartbeat);
+    });
+  },
+
+  // ------------------------------------------------------- Relay Nodes
+  async listRelayNodes(req, res, next) {
+    try {
+      let relays = await RelayNode.find().sort({ nodeId: 1 });
+      if (!relays || relays.length === 0) {
+        // Fallback to active simulator devices if DB is unseeded
+        const devices = meshSimulatorService.getDevices();
+        relays = devices.map((d) => ({
+          nodeId: d.deviceId,
+          trustScore: d.deviceId.includes('rogue') ? 25 : 80,
+          classification: d.deviceId.includes('rogue') ? 'MALICIOUS' : 'HONEST',
+          reputation: d.deviceId.includes('rogue') ? 25 : 80,
+          totalRelayed: d.packetCount(),
+          invalidRelayed: d.deviceId.includes('rogue') ? 1 : 0,
+          forwardedOk: d.packetCount(),
+          drops: 0,
+          lastEventAt: new Date(),
+        }));
+      }
+      res.json(relays);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  // -------------------------------------------------- Experiment Results
+  getExperimentResult(req, res) {
+    const { id } = req.params;
+    const paths = [
+      path.resolve(process.cwd(), '..', 'simulator', 'results', `exp_${id}.json`),
+      path.resolve(process.cwd(), 'results', `exp_${id}.json`),
+      path.resolve(process.cwd(), '..', 'results', `exp_${id}.json`),
+    ];
+    for (const p of paths) {
+      if (fs.existsSync(p)) {
+        try {
+          const data = JSON.parse(fs.readFileSync(p, 'utf8'));
+          return res.json(data);
+        } catch {}
+      }
+    }
+    res.status(404).json({ error: `Experiment result for ${id} not found` });
   },
 };

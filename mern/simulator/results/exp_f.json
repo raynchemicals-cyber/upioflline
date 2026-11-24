@@ -3,31 +3,103 @@
     "seed": 5,
     "run": 0,
     "maliciousId": "node-0",
-    "maliciousScore": 83,
-    "minHonestScore": 80,
+    "maliciousScore": 0,
+    "minHonestScore": 0,
     "separated": false,
     "honestScores": {
-      "node-1": 83,
-      "node-2": 99.997,
-      "node-3": 97.905,
-      "node-5": 97.905,
+      "node-1": 0,
+      "node-2": 2.343,
+      "node-3": 20,
+      "node-5": 20,
       "node-6": 80,
       "node-7": 80,
       "node-8": 80
+    },
+    "perNodeTable": {
+      "src": {
+        "label": "Source",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-0": {
+        "label": "Relay-0",
+        "profile": "malicious",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-1": {
+        "label": "Relay-1",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-2": {
+        "label": "Relay-2",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 2.34,
+        "classification": "MALICIOUS"
+      },
+      "node-3": {
+        "label": "Relay-3",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 20,
+        "classification": "MALICIOUS"
+      },
+      "node-4": {
+        "label": "Bridge-4",
+        "profile": "honest",
+        "hasInternet": true,
+        "score": 96.83,
+        "classification": "HONEST"
+      },
+      "node-5": {
+        "label": "Relay-5",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 20,
+        "classification": "MALICIOUS"
+      },
+      "node-6": {
+        "label": "Relay-6",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-7": {
+        "label": "Relay-7",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-8": {
+        "label": "Relay-8",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      }
     }
   },
   {
     "seed": 1005,
     "run": 1,
     "maliciousId": "node-0",
-    "maliciousScore": 83,
-    "minHonestScore": 80,
+    "maliciousScore": 0,
+    "minHonestScore": 0,
     "separated": false,
     "honestScores": {
-      "node-1": 83,
-      "node-2": 99.997,
-      "node-3": 97.905,
-      "node-5": 97.905,
+      "node-1": 0,
+      "node-2": 2.343,
+      "node-3": 20,
+      "node-5": 20,
       "node-6": 80,
       "node-7": 80,
       "node-8": 80
@@ -37,14 +109,14 @@
     "seed": 2005,
     "run": 2,
     "maliciousId": "node-0",
-    "maliciousScore": 83,
-    "minHonestScore": 80,
+    "maliciousScore": 0,
+    "minHonestScore": 0,
     "separated": false,
     "honestScores": {
-      "node-1": 83,
-      "node-2": 99.997,
-      "node-3": 97.905,
-      "node-5": 97.905,
+      "node-1": 0,
+      "node-2": 2.343,
+      "node-3": 20,
+      "node-5": 20,
       "node-6": 80,
       "node-7": 80,
       "node-8": 80
@@ -54,14 +126,14 @@
     "seed": 3005,
     "run": 3,
     "maliciousId": "node-0",
-    "maliciousScore": 83,
-    "minHonestScore": 80,
+    "maliciousScore": 0,
+    "minHonestScore": 0,
     "separated": false,
     "honestScores": {
-      "node-1": 83,
-      "node-2": 99.997,
-      "node-3": 97.905,
-      "node-5": 97.905,
+      "node-1": 0,
+      "node-2": 2.343,
+      "node-3": 20,
+      "node-5": 20,
       "node-6": 80,
       "node-7": 80,
       "node-8": 80
@@ -71,14 +143,14 @@
     "seed": 4005,
     "run": 4,
     "maliciousId": "node-0",
-    "maliciousScore": 83,
-    "minHonestScore": 80,
+    "maliciousScore": 0,
+    "minHonestScore": 0,
     "separated": false,
     "honestScores": {
-      "node-1": 83,
-      "node-2": 99.997,
-      "node-3": 97.905,
-      "node-5": 97.905,
+      "node-1": 0,
+      "node-2": 2.343,
+      "node-3": 20,
+      "node-5": 20,
       "node-6": 80,
       "node-7": 80,
       "node-8": 80

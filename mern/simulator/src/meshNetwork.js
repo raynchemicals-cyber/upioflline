@@ -381,7 +381,7 @@ export class MeshNetwork {
     }
 
     // ─── Apply trust updates after BFS completes ─────────────────────────────
-    this._applyTrustUpdates(sourceId, bridgeDeliveries, droppedHops, tamperedNodes);
+    this._applyTrustUpdates(sourceId, bridgeDeliveries, droppedHops, tamperedNodes, packet.ciphertext);
 
     return bridgeDeliveries;
   }
@@ -392,14 +392,17 @@ export class MeshNetwork {
    *
    * @private
    */
-  _applyTrustUpdates(sourceId, bridgeDeliveries, droppedHops, tamperedNodes) {
-    // 1. Reward relays on successful delivery paths
+  _applyTrustUpdates(sourceId, bridgeDeliveries, droppedHops, tamperedNodes, originalCiphertext) {
+    // 1. Reward relays on verified delivery paths
     for (const delivery of bridgeDeliveries) {
-      for (const nodeId of delivery.path) {
-        if (nodeId === sourceId) continue;
-        this.trustManager.update(nodeId, 'forward_ok');
+      const isVerified = originalCiphertext ? delivery.packet.ciphertext === originalCiphertext : true;
+      if (isVerified) {
+        for (const nodeId of delivery.path) {
+          if (nodeId === sourceId) continue;
+          this.trustManager.update(nodeId, 'forward_ok');
+        }
+        this.trustManager.update(delivery.bridgeId, 'delivered');
       }
-      this.trustManager.update(delivery.bridgeId, 'delivered');
     }
 
     // 2. Penalize nodes that dropped packets (delivery-receipt / timeout)
