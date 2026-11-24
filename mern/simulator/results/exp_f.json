@@ -1,0 +1,87 @@
+[
+  {
+    "seed": 5,
+    "run": 0,
+    "maliciousId": "node-0",
+    "maliciousScore": 83,
+    "minHonestScore": 80,
+    "separated": false,
+    "honestScores": {
+      "node-1": 83,
+      "node-2": 99.997,
+      "node-3": 97.905,
+      "node-5": 97.905,
+      "node-6": 80,
+      "node-7": 80,
+      "node-8": 80
+    }
+  },
+  {
+    "seed": 1005,
+    "run": 1,
+    "maliciousId": "node-0",
+    "maliciousScore": 83,
+    "minHonestScore": 80,
+    "separated": false,
+    "honestScores": {
+      "node-1": 83,
+      "node-2": 99.997,
+      "node-3": 97.905,
+      "node-5": 97.905,
+      "node-6": 80,
+      "node-7": 80,
+      "node-8": 80
+    }
+  },
+  {
+    "seed": 2005,
+    "run": 2,
+    "maliciousId": "node-0",
+    "maliciousScore": 83,
+    "minHonestScore": 80,
+    "separated": false,
+    "honestScores": {
+      "node-1": 83,
+      "node-2": 99.997,
+      "node-3": 97.905,
+      "node-5": 97.905,
+      "node-6": 80,
+      "node-7": 80,
+      "node-8": 80
+    }
+  },
+  {
+    "seed": 3005,
+    "run": 3,
+    "maliciousId": "node-0",
+    "maliciousScore": 83,
+    "minHonestScore": 80,
+    "separated": false,
+    "honestScores": {
+      "node-1": 83,
+      "node-2": 99.997,
+      "node-3": 97.905,
+      "node-5": 97.905,
+      "node-6": 80,
+      "node-7": 80,
+      "node-8": 80
+    }
+  },
+  {
+    "seed": 4005,
+    "run": 4,
+    "maliciousId": "node-0",
+    "maliciousScore": 83,
+    "minHonestScore": 80,
+    "separated": false,
+    "honestScores": {
+      "node-1": 83,
+      "node-2": 99.997,
+      "node-3": 97.905,
+      "node-5": 97.905,
+      "node-6": 80,
+      "node-7": 80,
+      "node-8": 80
+    }
+  }
+]
