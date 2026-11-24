@@ -560,6 +560,144 @@ async function expE() {
   return results;
 }
 
+// ─── Experiment F: Oracle-Free Blame Attribution ──────────────────────────────
+//
+// A2 requirement (item 4): run a variant WITHOUT the ground-truth oracle.
+//
+// In the standard experiments the simulator knows exactly which node tampered
+// (behaviourProfile === 'malicious') and applies the full DELTA_TAMPER (−35)
+// directly to that node. This is documented as a shortcut in README "What's
+// not real".
+//
+// Here we implement the alternative: when a packet is detected as tampered
+// (BRIDGE_REACHED fires with a corrupted ciphertext, OR the tamper event fires)
+// we penalise EVERY relay on the path EQUALLY with DELTA_PATH_CONTAMINATED (−5).
+// No node gets the full tamper penalty; blame is shared uniformly.
+//
+// Hypothesis: even with equal blame, the malicious node will accumulate more
+// penalties over time (because it tampers every packet it sees) while honest
+// nodes accumulate mostly positive forward_ok (+3) rewards. After enough packets
+// the malicious node's score should still separate below the honest cluster.
+//
+// Network: 10 nodes, 1 malicious (idx 0), rest honest.
+// Packets: 20 per run (more than exp A's 3 — needed to accumulate signal).
+// Metric:  final trust scores; does malicious node score < any honest node?
+//
+// Blame rule: on PACKET_TAMPERED event, apply path_contaminated (−5) to EVERY
+// relay on the path recorded in the event (from path[]).
+
+async function expF() {
+  const expId = 'f';
+  console.log('\n══ Exp F: Oracle-Free Blame (uniform path penalty, 10 nodes, 1 malicious, 20 pkts) ══');
+
+  const results = [];
+
+  for (let run = 0; run < RUNS_PER_EXP; run++) {
+    const seed         = run * 1000 + 5; // expIndex 5 → distinct from a–e
+    const rng          = createSeededRng(seed);
+    const clock        = new SimulatedClock();
+    const trustManager = new TrustManager();
+
+    // 1 malicious node at index 0, rest honest
+    const profiles = ['malicious', 'honest', 'honest', 'honest', 'honest',
+                      'honest', 'honest', 'honest', 'honest'];
+    const { nodes, edges } = buildTopology(10, profiles);
+
+    const net = wireNetwork({
+      nodes, edges,
+      routingMode:     'flood',
+      networkDropRate: 0,
+      trustManager,
+      clock,
+      rng,
+    });
+
+    const maliciousId = nodes.find((n) => n.behaviourProfile === 'malicious')?.id;
+    const honestIds   = nodes
+      .filter((n) => n.behaviourProfile === 'honest' && !n.hasInternet && n.id !== 'src')
+      .map((n) => n.id);
+
+    // ── Oracle-free blame: monkey-patch _applyTrustUpdates ──────────────────
+    // PACKET_TAMPERED event does NOT include the path (only rogueNode + packetId).
+    // To stay truly oracle-free we override the internal _applyTrustUpdates hook
+    // so that tampered paths get path_contaminated(-5) on EVERY node, including
+    // the actual tamperer (we do NOT use tampererNodeId for a heavier penalty).
+    net._applyTrustUpdates = function(sourceId, bridgeDeliveries, droppedHops, tamperedNodes) {
+      // 1. Reward successful deliveries normally
+      for (const delivery of bridgeDeliveries) {
+        for (const nodeId of delivery.path) {
+          if (nodeId === sourceId) continue;
+          trustManager.update(nodeId, 'forward_ok');
+        }
+        trustManager.update(delivery.bridgeId, 'delivered');
+      }
+      // 2. Drop penalties normally
+      const penalizedForDrops = new Set();
+      for (const { from } of droppedHops) {
+        if (!penalizedForDrops.has(from)) {
+          trustManager.update(from, 'drop');
+          penalizedForDrops.add(from);
+        }
+      }
+      // 3. ORACLE-FREE: every node on a tampered path gets path_contaminated(-5) equally.
+      //    We deliberately do NOT use tampererNodeId for tamper(-35) — that is the oracle.
+      for (const { path } of tamperedNodes) {
+        for (const nodeId of path) {
+          if (nodeId === sourceId) continue;
+          trustManager.update(nodeId, 'path_contaminated');
+        }
+      }
+      // Sync trustScore back into MeshNode for routing decisions
+      for (const [id, node] of net.nodes.entries()) {
+        node.trustScore = trustManager.getScore(id);
+      }
+    };
+
+    // Run 20 packets
+    for (let p = 0; p < 20; p++) {
+      await runTrial(net, clock, rng);
+    }
+
+    const snap           = trustManager.snapshot();
+    const maliciousScore = snap[maliciousId]?.score ?? INITIAL_TRUST;
+    const honestScores   = honestIds
+      .filter((id) => snap[id])
+      .map((id) => snap[id].score);
+
+    const minHonest = honestScores.length > 0 ? Math.min(...honestScores) : INITIAL_TRUST;
+    const separated = maliciousScore < minHonest;
+
+    results.push({
+      seed,
+      run,
+      maliciousId,
+      maliciousScore: parseFloat(maliciousScore.toFixed(3)),
+      minHonestScore: parseFloat(minHonest.toFixed(3)),
+      separated,
+      honestScores: Object.fromEntries(
+        honestIds.map((id) => [id, parseFloat((snap[id]?.score ?? INITIAL_TRUST).toFixed(3))])
+      ),
+    });
+
+    console.log(
+      `  run ${run}: malicious=${maliciousScore.toFixed(1)} ` +
+      `minHonest=${minHonest.toFixed(1)} separated=${separated}`
+    );
+  }
+
+  // Report separation rate honestly
+  const sepCount = results.filter((r) => r.separated).length;
+  console.log(`\n  Oracle-free blame: malicious separated from honest in ${sepCount}/${results.length} runs`);
+  if (sepCount < results.length) {
+    console.log(
+      '  ⚠  Uniform blame is insufficient to fully separate the malicious node in all runs.\n' +
+      '     This is expected: without ground truth, honest relays also absorb false blame.'
+    );
+  }
+
+  return results;
+}
+
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -575,6 +713,7 @@ async function main() {
   allResults.c = await expC();
   allResults.d = await expD();
   allResults.e = await expE();
+  allResults.f = await expF();
 
   // Write per-experiment JSON
   for (const [id, data] of Object.entries(allResults)) {
@@ -588,7 +727,7 @@ async function main() {
   fs.writeFileSync(summaryPath, JSON.stringify({
     generated: new Date().toISOString(),
     experiments: Object.keys(allResults),
-    note: 'All seeds: runIndex * 1000 + expIndex (a=0,b=1,c=2,d=3,e=4)',
+    note: 'Seeds: a–e: runIndex*1000+expIndex (a=0…e=4); f: runIndex*1000+5',
   }, null, 2), 'utf8');
 
   console.log(`\n✅  Experiments complete. Results in: ${RESULTS_DIR}`);

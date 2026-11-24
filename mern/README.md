@@ -186,6 +186,34 @@ cd mern/server
 npm test
 ```
 
+### Test suite inventory (actual counts from source)
+
+| File | Tests | Requires MongoDB? |
+|------|-------|-------------------|
+| `tests/crypto.test.js` | 7 | No |
+| `tests/trust.test.js` | 27 | No |
+| `tests/routing.test.js` | 12 | No |
+| `tests/concurrency.and.pipeline.test.js` | 6 | **Yes** (auto-starts in-memory) |
+
+### Concurrency suite prerequisites
+
+`concurrency.and.pipeline.test.js` connects to MongoDB at startup.
+If `MONGODB_URI` is unset (default), `mongodb-memory-server` starts automatically — no external MongoDB needed. The suite has a **60 s timeout scoped to itself** (via `jest.setTimeout(60_000)` at the top of that file). The other three suites use Jest's default 5 s timeout.
+
+**To run only the fast suites (no MongoDB needed):**
+```bash
+cd mern/server
+npx jest --testPathPattern="trust|routing|crypto"
+```
+
+> **Sandbox / blocked-port environments**: `concurrency.and.pipeline.test.js` cannot run if the sandbox blocks port binding (required by `mongodb-memory-server`). Run it in a real Node environment. The other three suites always pass in any environment.
+
+### Why trust.test.js has 27 tests
+
+The file was written in two phases:
+- **Phase 1 (21 tests):** six `describe` blocks covering EMA formula, asymmetric deltas, classification thresholds, blame attribution, drop penalty, and event-log / state management.
+- **Phase 2 (+ 6 tests in 2 new describes):** added the consecutive-tamper trace describe (2 tests) and the 10-node scenario describe (this was 1 more test), plus the duplicate of the blame describe brought the total to **27**. The "+2 new" figure in earlier summaries was inaccurate — the correct delta is +6 tests across 2 new describe blocks.
+
 ### Running the Experiment Harness
 
 ```bash
@@ -195,6 +223,8 @@ npm run experiments
 ```
 
 Results are written to `mern/simulator/results/` as JSON files. The harness is fully deterministic: running it twice with the same code produces bit-for-bit identical JSON output (excluding the cosmetic timestamp in `summary.json`).
+
+Experiments a–e are the standard suite; **experiment f** (`exp_f.json`) is the oracle-free blame variant added in Step A2.
 
 ### Verified Test Suites:
 1. **`tests/crypto.test.js`**:
@@ -248,6 +278,7 @@ This implementation is an educational and architectural proof of concept. The fo
 | Simulator Behaviour | Why it is a shortcut | Real-world equivalent |
 |---|---|---|
 | **Drop detection uses ground truth** — when `shouldDrop()` returns `true` or the network-level `dropRate` fires, the simulator *knows* exactly which node dropped which packet. The forwarding node immediately receives a `drop` (−8) trust penalty. | In a real BLE mesh there is no guaranteed delivery receipt. A drop is detected only by timeout or an explicit ACK from the next hop, and only the sender of that hop can observe the miss. | Per-hop ACK with configurable timeout (e.g. 500 ms); relay waits for ACK and re-queues or penalises on timeout. |
-| **Tamper blame uses ground truth** — `shouldTamper()` returning `true` means the simulator applies the full `tamper` (−35) penalty directly to the tampering node. Innocent relays on the same path receive only `path_contaminated` (−5). | The server (`riskScoringService`) does *not* know which relay tampered; it heuristically blames the last relay before the bridge. This is documented in the trust manager header. | Packet-level signing (each hop signs the packet with its device key); verifier identifies exact tamper point from broken chain signature. |
+| **Tamper blame uses simulator ground truth** — `shouldTamper()` returning `true` means the simulator applies the full `tamper` (−35) penalty directly to the tampering node. Innocent relays on the same path receive only `path_contaminated` (−5). | The server (`riskScoringService`) does *not* know which relay tampered; it heuristically blames the last relay before the bridge. This is documented in the trust manager header. **Real blame attribution is an unsolved problem for AES-GCM-encrypted mesh packets: GCM authentication verifies the entire ciphertext but cannot identify *which hop* altered it. Each hop would need to sign the packet with its own device key so the verifier can walk the chain and find the break.** Experiment F in `experiments.js` explores oracle-free blame (uniform path penalty), showing that even without ground truth the malicious node accumulates more penalties over many packets. | Packet-level signing (each hop signs the packet with its device key); verifier identifies exact tamper point from broken chain signature. |
 | **Stale/replay detection at the backend uses `Date.now()`** — `bridgeIngestionService` compares `instruction.signedAt` against the real wall clock to detect packets older than 24 h. This is not inside the simulator's seeded PRNG or simulated clock. | Experiment runs use `createdAt: 0` for simulated packets, so stale-check timing never fires inside experiment code. Stale and replay scenarios are tested in `concurrency.and.pipeline.test.js` using live `Date.now()`. | Hardware clock with signed timestamps; NPCI backend tracks packet IDs in a distributed set. |
+| **Experiment E (security rejections) reimplements stale/replay checks** — `expE()` in `experiments.js` does not call the real `bridgeIngestionService`. It simulates replay by re-propagating the same `packetId` through the mesh and checking whether nodes' packet caches block re-entry. The real 24 h stale window is not exercised because simulated packets use `createdAt: 0`. | The concurrency test suite (`concurrency.and.pipeline.test.js`) exercises the real `bridgeIngestionService` with live `Date.now()`, including stale and future-dated packets. An injectable-clock variant would require passing a clock into `BridgeIngestionService`; this is noted as a future hardening task. | An injectable `Clock` interface (strategy pattern) passed into `BridgeIngestionService`, with a `SystemClock` default and a `FakeClock` for tests. |
 | **Isolation Forest `Math.random()` in tree building** — `isolationForest.js` uses three raw `Math.random()` calls during `fit()` (sub-sampling, feature selection, split-value selection). `riskScoringService.trainInitialModel()` uses a fixed-seed Mulberry32 PRNG to generate the *training data* but cannot inject the PRNG into `IsolationForest.fit()`. | This means the forest structure differs between server restarts. However, training happens once at server startup on fixed synthetic data with identical distribution, so the *functional behaviour* (flagging thresholds) is stable in practice. Experiment runs in `simulator/src/experiments.js` use their own inline `fraudScore()` function that does **not** call the Isolation Forest at all, so experiment reproducibility is unaffected. | Use a seeded PRNG injected into the forest (accepted parameter pattern). |

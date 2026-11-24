@@ -10,6 +10,22 @@ import { demoService } from '../src/services/demoService.js';
 import { idempotencyService } from '../src/services/idempotencyService.js';
 import { riskScoringService } from '../src/services/riskScoringService.js';
 
+// ── Timeout scoped to this suite only ────────────────────────────────────────
+// These tests require a real (or in-memory) MongoDB connection and async
+// settlement logic.  60 s is generous; adjust if your CI runner is slower.
+//
+// Prerequisites (see README "Running Tests"):
+//   • MONGODB_URI env var — if unset the server boots mongodb-memory-server
+//     automatically.  No external MongoDB needed for local runs.
+//   • Node.js ≥ 18 (uses --experimental-vm-modules for Jest ESM support).
+//
+// Known issue: in sandboxed environments that block port binding this suite
+// cannot run.  Run it in a real Node environment with:
+//   cd mern/server && npm test
+// The other three suites (crypto, trust, routing) run without any server.
+// ─────────────────────────────────────────────────────────────────────────────
+jest.setTimeout(60_000);
+
 describe('UPI Offline Mesh Pipeline & Concurrency Suite', () => {
   let app;
 

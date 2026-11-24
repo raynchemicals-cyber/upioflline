@@ -24,7 +24,6 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "transform": {},
-    "testTimeout": 60000
+    "transform": {}
   }
 }
