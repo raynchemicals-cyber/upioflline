@@ -186,6 +186,16 @@ cd mern/server
 npm test
 ```
 
+### Running the Experiment Harness
+
+```bash
+cd mern/simulator
+npm install
+npm run experiments
+```
+
+Results are written to `mern/simulator/results/` as JSON files. The harness is fully deterministic: running it twice with the same code produces bit-for-bit identical JSON output (excluding the cosmetic timestamp in `summary.json`).
+
 ### Verified Test Suites:
 1. **`tests/crypto.test.js`**:
    - Encrypt/decrypt round trip matching all fields.
@@ -202,6 +212,20 @@ npm test
    - Stale packet rejection (> 24h freshness window).
    - Future-dated clock-skew protection.
    - AI Fraud & Risk Scoring flagging + human review authorization.
+3. **`tests/trust.test.js`**:
+   - EMA update formula correctness for every event type.
+   - Asymmetric penalty: tamper (−35) ≈ 11.67× forward_ok (+3).
+   - Classification thresholds (HONEST ≥ 70, UNRELIABLE 40–69, MALICIOUS < 40).
+   - Consecutive tamper trace: reaches MALICIOUS (< 40) in ≤ 8 events from initial trust = 80.
+   - 10-node scenario: honest nodes stay ≥ 70, malicious node drops below 40.
+   - Blame attribution: tamperer gets −35, path nodes get −5.
+   - Drop penalty on forwarding node (delivery-receipt mechanism).
+4. **`tests/routing.test.js`**:
+   - Trust-aware routing excludes low-trust peers below threshold.
+   - Fallback to flooding when no peer meets threshold (no partition).
+   - ε-Greedy exploration adds a low-trust peer occasionally.
+   - Flood mode always includes all candidates.
+   - Seeded PRNG makes routing deterministic across runs.
 
 ---
 
@@ -218,3 +242,12 @@ This implementation is an educational and architectural proof of concept. The fo
 | PIN hashed on device with SHA-256 | Hardware-backed secure element (e.g. Android StrongBox / KeyStore) with bank-verified encrypted PIN blocks. |
 | Unreserved offline balances | Hardware-backed offline wallets (like UPI Lite) with pre-funded offline balance reserves to prevent double-spending. |
 | Unauthenticated `/api/bridge/ingest` | Mutual TLS (mTLS) with device attestation certificates (Play Integrity API / SafetyNet). |
+
+### Simulator-specific shortcuts ("not real" in the mesh layer)
+
+| Simulator Behaviour | Why it is a shortcut | Real-world equivalent |
+|---|---|---|
+| **Drop detection uses ground truth** — when `shouldDrop()` returns `true` or the network-level `dropRate` fires, the simulator *knows* exactly which node dropped which packet. The forwarding node immediately receives a `drop` (−8) trust penalty. | In a real BLE mesh there is no guaranteed delivery receipt. A drop is detected only by timeout or an explicit ACK from the next hop, and only the sender of that hop can observe the miss. | Per-hop ACK with configurable timeout (e.g. 500 ms); relay waits for ACK and re-queues or penalises on timeout. |
+| **Tamper blame uses ground truth** — `shouldTamper()` returning `true` means the simulator applies the full `tamper` (−35) penalty directly to the tampering node. Innocent relays on the same path receive only `path_contaminated` (−5). | The server (`riskScoringService`) does *not* know which relay tampered; it heuristically blames the last relay before the bridge. This is documented in the trust manager header. | Packet-level signing (each hop signs the packet with its device key); verifier identifies exact tamper point from broken chain signature. |
+| **Stale/replay detection at the backend uses `Date.now()`** — `bridgeIngestionService` compares `instruction.signedAt` against the real wall clock to detect packets older than 24 h. This is not inside the simulator's seeded PRNG or simulated clock. | Experiment runs use `createdAt: 0` for simulated packets, so stale-check timing never fires inside experiment code. Stale and replay scenarios are tested in `concurrency.and.pipeline.test.js` using live `Date.now()`. | Hardware clock with signed timestamps; NPCI backend tracks packet IDs in a distributed set. |
+| **Isolation Forest `Math.random()` in tree building** — `isolationForest.js` uses three raw `Math.random()` calls during `fit()` (sub-sampling, feature selection, split-value selection). `riskScoringService.trainInitialModel()` uses a fixed-seed Mulberry32 PRNG to generate the *training data* but cannot inject the PRNG into `IsolationForest.fit()`. | This means the forest structure differs between server restarts. However, training happens once at server startup on fixed synthetic data with identical distribution, so the *functional behaviour* (flagging thresholds) is stable in practice. Experiment runs in `simulator/src/experiments.js` use their own inline `fraudScore()` function that does **not** call the Isolation Forest at all, so experiment reproducibility is unaffected. | Use a seeded PRNG injected into the forest (accepted parameter pattern). |

@@ -1,0 +1,133 @@
+{
+  "tamper": [
+    {
+      "seed": 4,
+      "run": 0,
+      "tamperedCount": 1,
+      "fraud": {
+        "riskScore": 0,
+        "isFlagged": false,
+        "minTrust": 75.65,
+        "offendingNode": "node-0"
+      }
+    },
+    {
+      "seed": 1004,
+      "run": 1,
+      "tamperedCount": 1,
+      "fraud": {
+        "riskScore": 0,
+        "isFlagged": false,
+        "minTrust": 75.65,
+        "offendingNode": "node-0"
+      }
+    },
+    {
+      "seed": 2004,
+      "run": 2,
+      "tamperedCount": 1,
+      "fraud": {
+        "riskScore": 0,
+        "isFlagged": false,
+        "minTrust": 75.65,
+        "offendingNode": "node-0"
+      }
+    },
+    {
+      "seed": 3004,
+      "run": 3,
+      "tamperedCount": 1,
+      "fraud": {
+        "riskScore": 0,
+        "isFlagged": false,
+        "minTrust": 75.65,
+        "offendingNode": "node-0"
+      }
+    },
+    {
+      "seed": 4004,
+      "run": 4,
+      "tamperedCount": 1,
+      "fraud": {
+        "riskScore": 0,
+        "isFlagged": false,
+        "minTrust": 75.65,
+        "offendingNode": "node-0"
+      }
+    }
+  ],
+  "replay": [
+    {
+      "seed": 4,
+      "run": 0,
+      "firstDeliveries": 4,
+      "replayDeliveries": 4,
+      "replayBlocked": false
+    },
+    {
+      "seed": 1004,
+      "run": 1,
+      "firstDeliveries": 4,
+      "replayDeliveries": 4,
+      "replayBlocked": false
+    },
+    {
+      "seed": 2004,
+      "run": 2,
+      "firstDeliveries": 4,
+      "replayDeliveries": 4,
+      "replayBlocked": false
+    },
+    {
+      "seed": 3004,
+      "run": 3,
+      "firstDeliveries": 4,
+      "replayDeliveries": 4,
+      "replayBlocked": false
+    },
+    {
+      "seed": 4004,
+      "run": 4,
+      "firstDeliveries": 4,
+      "replayDeliveries": 4,
+      "replayBlocked": false
+    }
+  ],
+  "duplicate": [
+    {
+      "seed": 4,
+      "run": 0,
+      "deliveriesFromSrc1": 4,
+      "deliveriesFromSrc2": 4,
+      "bothReached": true
+    },
+    {
+      "seed": 1004,
+      "run": 1,
+      "deliveriesFromSrc1": 4,
+      "deliveriesFromSrc2": 4,
+      "bothReached": true
+    },
+    {
+      "seed": 2004,
+      "run": 2,
+      "deliveriesFromSrc1": 4,
+      "deliveriesFromSrc2": 4,
+      "bothReached": true
+    },
+    {
+      "seed": 3004,
+      "run": 3,
+      "deliveriesFromSrc1": 4,
+      "deliveriesFromSrc2": 4,
+      "bothReached": true
+    },
+    {
+      "seed": 4004,
+      "run": 4,
+      "deliveriesFromSrc1": 4,
+      "deliveriesFromSrc2": 4,
+      "bothReached": true
+    }
+  ]
+}
