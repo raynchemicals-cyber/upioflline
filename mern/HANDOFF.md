@@ -10,12 +10,12 @@
 
 ## Completed Tasks
 
-1. **Exp F (Oracle-Free Blame Attribution) Fixed:**
+1. **Exp F (Oracle-Free Blame Attribution):**
    - Credited `forward_ok` (+3) only when packets verify end-to-end (ciphertext matches).
    - On failed verification, penalised all intermediate relays on the path uniformly with `path_contaminated` (−5).
-   - Increased scale to 200 packets per run across 5 distinct seeds.
-   - Printed full per-node trust table.
-   - **Honest Scientific Finding:** Downstream honest relays situated directly between the attacker and the bridge absorb equal penalties, decaying to 0.00 alongside the attacker. Thus, individual separation from downstream path neighbors does not occur under uniform penalty without per-hop cryptographic signatures. However, the corrupted branch as a whole is quarantined by trust-aware routing.
+   - 200 packets × 5 runs. **Negative result:** uniform blame misclassifies honest relays that share a path with the tamperer. It does not isolate a contaminated branch.
+   - **Seed bug (fixed):** `buildTopology` ignored the rng, so seeds 5/1005/2005/3005/4005 produced one graph and identical scores. Exp F now draws skip-2/skip-3 edges from the run rng (A–E still use the fixed cross-links). Rerun: 5 distinct graphs (15/16/16/13/18 edges); malicious score 0.0 in all 5; min honest 0 / 2.401 / 0.321 / 0 / 0.321; separated in 3/5 only because a few honest scores sit just above 0.
+   - **Why node-6/7/8 stay at 80.00 (seed 5):** the only bridge is node-4. Flood will not revisit a node, TTL is 5, and trust updates only nodes on a bridge-delivery path. node-6 is at least 4 hops from src and cannot still reach node-4, so node-6/7/8 never receive `forward_ok` or `path_contaminated`. Seed-5 paths all end `…>node-4` and are: src>node-0>node-1>node-3>node-4, src>node-0>node-2>node-3>node-4, src>node-0>node-2>node-5>node-4, src>node-0>node-1>node-2>node-3>node-4, src>node-0>node-1>node-2>node-5>node-4, src>node-0>node-2>node-1>node-3>node-4. Every one of those paths includes the tamperer (node-0), so every used honest relay falls to 0.
 
 2. **Metrics & Telemetry Service:**
    - Implemented `MetricsCollector` (simulator) and `MetricsService` (server).
@@ -67,5 +67,8 @@ npm run build
 ---
 
 ## What's Next
+- Exp G: signed hop verification (penalise only the previous hop). False-positive/false-negative columns on A/F/G. Rewrite Exp F as a negative result. Regenerate RESULTS.md. Dashboard check. Single trust source.
 - Run `concurrency.and.pipeline.test.js` against a live local MongoDB instance.
-- Provide a `docker-compose.yml` to launch MongoDB, backend, simulator, and dashboard together with one command.
+
+## Task log
+- **Task 1 (done):** Diagnosed Exp F. Topology now varies by seed. Run: `cd mern/simulator && node src/experiments.js --only=f`. Numbers are in `simulator/results/exp_f.json`.

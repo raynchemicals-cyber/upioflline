@@ -6,11 +6,41 @@
     "maliciousScore": 0,
     "minHonestScore": 0,
     "separated": false,
+    "topologyEdges": [
+      "src--node-0",
+      "node-0--node-1",
+      "node-1--node-2",
+      "node-2--node-3",
+      "node-3--node-4",
+      "node-4--node-5",
+      "node-5--node-6",
+      "node-6--node-7",
+      "node-7--node-8",
+      "node-0--node-2",
+      "node-1--node-3",
+      "node-2--node-5",
+      "node-3--node-6",
+      "node-5--node-8",
+      "node-6--node-8"
+    ],
+    "deliveryPaths": [
+      "src>node-0>node-1>node-3>node-4",
+      "src>node-0>node-2>node-3>node-4",
+      "src>node-0>node-2>node-5>node-4",
+      "src>node-0>node-1>node-2>node-3>node-4",
+      "src>node-0>node-1>node-2>node-5>node-4",
+      "src>node-0>node-2>node-1>node-3>node-4"
+    ],
+    "neverOnDeliveryPath": [
+      "node-6",
+      "node-7",
+      "node-8"
+    ],
     "honestScores": {
       "node-1": 0,
-      "node-2": 2.343,
-      "node-3": 20,
-      "node-5": 20,
+      "node-2": 0,
+      "node-3": 0,
+      "node-5": 0,
       "node-6": 80,
       "node-7": 80,
       "node-8": 80
@@ -41,7 +71,129 @@
         "label": "Relay-2",
         "profile": "honest",
         "hasInternet": false,
-        "score": 2.34,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-3": {
+        "label": "Relay-3",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-4": {
+        "label": "Bridge-4",
+        "profile": "honest",
+        "hasInternet": true,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-5": {
+        "label": "Relay-5",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-6": {
+        "label": "Relay-6",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-7": {
+        "label": "Relay-7",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-8": {
+        "label": "Relay-8",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      }
+    }
+  },
+  {
+    "seed": 1005,
+    "run": 1,
+    "maliciousId": "node-0",
+    "maliciousScore": 0,
+    "minHonestScore": 2.401,
+    "separated": true,
+    "topologyEdges": [
+      "src--node-0",
+      "node-0--node-1",
+      "node-1--node-2",
+      "node-2--node-3",
+      "node-3--node-4",
+      "node-4--node-5",
+      "node-5--node-6",
+      "node-6--node-7",
+      "node-7--node-8",
+      "src--node-1",
+      "node-1--node-4",
+      "node-2--node-4",
+      "node-2--node-5",
+      "node-3--node-6",
+      "node-4--node-7",
+      "node-5--node-8"
+    ],
+    "deliveryPaths": [
+      "src>node-1>node-4",
+      "src>node-0>node-1>node-4",
+      "src>node-1>node-2>node-4",
+      "src>node-0>node-1>node-2>node-4",
+      "src>node-1>node-2>node-3>node-4",
+      "src>node-1>node-2>node-5>node-4",
+      "src>node-0>node-1>node-2>node-3>node-4",
+      "src>node-0>node-1>node-2>node-5>node-4"
+    ],
+    "neverOnDeliveryPath": [
+      "node-6",
+      "node-7",
+      "node-8"
+    ],
+    "honestScores": {
+      "node-1": 2.43,
+      "node-2": 2.401,
+      "node-3": 20,
+      "node-5": 20,
+      "node-6": 80,
+      "node-7": 80,
+      "node-8": 80
+    },
+    "perNodeTable": {
+      "src": {
+        "label": "Source",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-0": {
+        "label": "Relay-0",
+        "profile": "malicious",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-1": {
+        "label": "Relay-1",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 2.43,
+        "classification": "MALICIOUS"
+      },
+      "node-2": {
+        "label": "Relay-2",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 2.4,
         "classification": "MALICIOUS"
       },
       "node-3": {
@@ -55,7 +207,7 @@
         "label": "Bridge-4",
         "profile": "honest",
         "hasInternet": true,
-        "score": 96.83,
+        "score": 97.01,
         "classification": "HONEST"
       },
       "node-5": {
@@ -89,37 +241,131 @@
     }
   },
   {
-    "seed": 1005,
-    "run": 1,
-    "maliciousId": "node-0",
-    "maliciousScore": 0,
-    "minHonestScore": 0,
-    "separated": false,
-    "honestScores": {
-      "node-1": 0,
-      "node-2": 2.343,
-      "node-3": 20,
-      "node-5": 20,
-      "node-6": 80,
-      "node-7": 80,
-      "node-8": 80
-    }
-  },
-  {
     "seed": 2005,
     "run": 2,
     "maliciousId": "node-0",
     "maliciousScore": 0,
-    "minHonestScore": 0,
-    "separated": false,
+    "minHonestScore": 0.321,
+    "separated": true,
+    "topologyEdges": [
+      "src--node-0",
+      "node-0--node-1",
+      "node-1--node-2",
+      "node-2--node-3",
+      "node-3--node-4",
+      "node-4--node-5",
+      "node-5--node-6",
+      "node-6--node-7",
+      "node-7--node-8",
+      "src--node-2",
+      "node-0--node-3",
+      "node-1--node-4",
+      "node-2--node-4",
+      "node-3--node-6",
+      "node-4--node-6",
+      "node-5--node-8"
+    ],
+    "deliveryPaths": [
+      "src>node-2>node-4",
+      "src>node-0>node-1>node-4",
+      "src>node-0>node-3>node-4",
+      "src>node-2>node-1>node-4",
+      "src>node-2>node-3>node-4",
+      "src>node-0>node-1>node-2>node-4",
+      "src>node-0>node-3>node-2>node-4",
+      "src>node-0>node-3>node-6>node-4",
+      "src>node-2>node-3>node-6>node-4",
+      "src>node-0>node-1>node-2>node-3>node-4",
+      "src>node-0>node-3>node-2>node-1>node-4",
+      "src>node-0>node-3>node-6>node-5>node-4",
+      "src>node-2>node-1>node-0>node-3>node-4",
+      "src>node-2>node-3>node-0>node-1>node-4",
+      "src>node-2>node-3>node-6>node-5>node-4"
+    ],
+    "neverOnDeliveryPath": [
+      "node-7",
+      "node-8"
+    ],
     "honestScores": {
-      "node-1": 0,
-      "node-2": 2.343,
-      "node-3": 20,
+      "node-1": 0.321,
+      "node-2": 1.917,
+      "node-3": 1.091,
       "node-5": 20,
-      "node-6": 80,
+      "node-6": 3,
       "node-7": 80,
       "node-8": 80
+    },
+    "perNodeTable": {
+      "src": {
+        "label": "Source",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-0": {
+        "label": "Relay-0",
+        "profile": "malicious",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-1": {
+        "label": "Relay-1",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0.32,
+        "classification": "MALICIOUS"
+      },
+      "node-2": {
+        "label": "Relay-2",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 1.92,
+        "classification": "MALICIOUS"
+      },
+      "node-3": {
+        "label": "Relay-3",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 1.09,
+        "classification": "MALICIOUS"
+      },
+      "node-4": {
+        "label": "Bridge-4",
+        "profile": "honest",
+        "hasInternet": true,
+        "score": 3.31,
+        "classification": "MALICIOUS"
+      },
+      "node-5": {
+        "label": "Relay-5",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 20,
+        "classification": "MALICIOUS"
+      },
+      "node-6": {
+        "label": "Relay-6",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 3,
+        "classification": "MALICIOUS"
+      },
+      "node-7": {
+        "label": "Relay-7",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-8": {
+        "label": "Relay-8",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      }
     }
   },
   {
@@ -129,14 +375,113 @@
     "maliciousScore": 0,
     "minHonestScore": 0,
     "separated": false,
+    "topologyEdges": [
+      "src--node-0",
+      "node-0--node-1",
+      "node-1--node-2",
+      "node-2--node-3",
+      "node-3--node-4",
+      "node-4--node-5",
+      "node-5--node-6",
+      "node-6--node-7",
+      "node-7--node-8",
+      "node-1--node-3",
+      "node-2--node-4",
+      "node-2--node-5",
+      "node-6--node-8"
+    ],
+    "deliveryPaths": [
+      "src>node-0>node-1>node-2>node-4",
+      "src>node-0>node-1>node-3>node-4",
+      "src>node-0>node-1>node-2>node-3>node-4",
+      "src>node-0>node-1>node-2>node-5>node-4",
+      "src>node-0>node-1>node-3>node-2>node-4"
+    ],
+    "neverOnDeliveryPath": [
+      "node-6",
+      "node-7",
+      "node-8"
+    ],
     "honestScores": {
       "node-1": 0,
-      "node-2": 2.343,
-      "node-3": 20,
-      "node-5": 20,
+      "node-2": 0,
+      "node-3": 0,
+      "node-5": 0,
       "node-6": 80,
       "node-7": 80,
       "node-8": 80
+    },
+    "perNodeTable": {
+      "src": {
+        "label": "Source",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-0": {
+        "label": "Relay-0",
+        "profile": "malicious",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-1": {
+        "label": "Relay-1",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-2": {
+        "label": "Relay-2",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-3": {
+        "label": "Relay-3",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-4": {
+        "label": "Bridge-4",
+        "profile": "honest",
+        "hasInternet": true,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-5": {
+        "label": "Relay-5",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-6": {
+        "label": "Relay-6",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-7": {
+        "label": "Relay-7",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-8": {
+        "label": "Relay-8",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      }
     }
   },
   {
@@ -144,16 +489,133 @@
     "run": 4,
     "maliciousId": "node-0",
     "maliciousScore": 0,
-    "minHonestScore": 0,
-    "separated": false,
+    "minHonestScore": 0.321,
+    "separated": true,
+    "topologyEdges": [
+      "src--node-0",
+      "node-0--node-1",
+      "node-1--node-2",
+      "node-2--node-3",
+      "node-3--node-4",
+      "node-4--node-5",
+      "node-5--node-6",
+      "node-6--node-7",
+      "node-7--node-8",
+      "src--node-2",
+      "node-0--node-2",
+      "node-1--node-4",
+      "node-2--node-4",
+      "node-2--node-5",
+      "node-3--node-6",
+      "node-4--node-6",
+      "node-5--node-7",
+      "node-6--node-8"
+    ],
+    "deliveryPaths": [
+      "src>node-2>node-4",
+      "src>node-0>node-1>node-4",
+      "src>node-0>node-2>node-4",
+      "src>node-2>node-1>node-4",
+      "src>node-2>node-3>node-4",
+      "src>node-2>node-5>node-4",
+      "src>node-0>node-1>node-2>node-4",
+      "src>node-0>node-2>node-1>node-4",
+      "src>node-0>node-2>node-3>node-4",
+      "src>node-0>node-2>node-5>node-4",
+      "src>node-2>node-3>node-6>node-4",
+      "src>node-2>node-0>node-1>node-4",
+      "src>node-2>node-5>node-6>node-4",
+      "src>node-0>node-1>node-2>node-3>node-4",
+      "src>node-0>node-1>node-2>node-5>node-4",
+      "src>node-0>node-2>node-3>node-6>node-4",
+      "src>node-0>node-2>node-5>node-6>node-4",
+      "src>node-2>node-3>node-6>node-5>node-4",
+      "src>node-2>node-5>node-6>node-3>node-4",
+      "src>node-2>node-5>node-7>node-6>node-4"
+    ],
+    "neverOnDeliveryPath": [
+      "node-8"
+    ],
     "honestScores": {
-      "node-1": 0,
-      "node-2": 2.343,
-      "node-3": 20,
-      "node-5": 20,
-      "node-6": 80,
-      "node-7": 80,
+      "node-1": 0.321,
+      "node-2": 2.722,
+      "node-3": 3.891,
+      "node-5": 80,
+      "node-6": 98.344,
+      "node-7": 100,
       "node-8": 80
+    },
+    "perNodeTable": {
+      "src": {
+        "label": "Source",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-0": {
+        "label": "Relay-0",
+        "profile": "malicious",
+        "hasInternet": false,
+        "score": 0,
+        "classification": "MALICIOUS"
+      },
+      "node-1": {
+        "label": "Relay-1",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 0.32,
+        "classification": "MALICIOUS"
+      },
+      "node-2": {
+        "label": "Relay-2",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 2.72,
+        "classification": "MALICIOUS"
+      },
+      "node-3": {
+        "label": "Relay-3",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 3.89,
+        "classification": "MALICIOUS"
+      },
+      "node-4": {
+        "label": "Bridge-4",
+        "profile": "honest",
+        "hasInternet": true,
+        "score": 97.18,
+        "classification": "HONEST"
+      },
+      "node-5": {
+        "label": "Relay-5",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      },
+      "node-6": {
+        "label": "Relay-6",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 98.34,
+        "classification": "HONEST"
+      },
+      "node-7": {
+        "label": "Relay-7",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 100,
+        "classification": "HONEST"
+      },
+      "node-8": {
+        "label": "Relay-8",
+        "profile": "honest",
+        "hasInternet": false,
+        "score": 80,
+        "classification": "HONEST"
+      }
     }
   }
 ]

@@ -102,9 +102,12 @@ function makePacket(rng) {
  * @param {number} nodeCount   Total nodes including bridges
  * @param {string[]} profiles  Behaviour profile per relay node ('honest'|'unreliable'|'malicious')
  * @param {number} dropRate    Per-node drop rate for the 'unreliable'-equivalent
+ * @param {(() => number)|null} [rng]  When set, redundant edges are drawn from this
+ *   PRNG so each seed yields a different graph. Omitted → the historical fixed
+ *   cross-links (experiments A–E stay reproducible).
  * @returns {{ nodes: MeshNode[], edges: [string,string][] }}
  */
-function buildTopology(nodeCount, profiles = [], dropRate = 0) {
+function buildTopology(nodeCount, profiles = [], dropRate = 0, rng = null) {
   const nodes = [];
   const edges = [];
 
@@ -140,9 +143,22 @@ function buildTopology(nodeCount, profiles = [], dropRate = 0) {
   for (let i = 0; i < nodes.length - 1; i++) {
     edges.push([nodes[i].id, nodes[i + 1].id]);
   }
-  // Cross-links for redundancy in topologies with ≥ 6 nodes
-  for (let i = 0; i + 3 < nodes.length; i += 3) {
-    edges.push([nodes[i].id, nodes[i + 3].id]);
+  // Cross-links for redundancy in topologies with ≥ 6 nodes.
+  // Without an rng this is the historical every-3rd skip (A–E).
+  // With an rng, each seed independently accepts skip-2 and skip-3 edges.
+  if (!rng) {
+    for (let i = 0; i + 3 < nodes.length; i += 3) {
+      edges.push([nodes[i].id, nodes[i + 3].id]);
+    }
+  } else {
+    for (let i = 0; i < nodes.length; i++) {
+      for (const skip of [2, 3]) {
+        const j = i + skip;
+        if (j < nodes.length && rng() < 0.5) {
+          edges.push([nodes[i].id, nodes[j].id]);
+        }
+      }
+    }
   }
 
   return { nodes, edges };
@@ -604,7 +620,11 @@ async function expF() {
     // 1 malicious node at index 0, rest honest
     const profiles = ['malicious', 'honest', 'honest', 'honest', 'honest',
                       'honest', 'honest', 'honest', 'honest'];
-    const { nodes, edges } = buildTopology(10, profiles);
+    // Topology must consume this run's rng. Previously buildTopology ignored
+    // the seed, so runs 0–4 (seeds 5, 1005, …) walked one identical graph and
+    // flood+dropRate 0 produced identical scores.
+    const { nodes, edges } = buildTopology(10, profiles, 0, rng);
+    const edgeList = edges.map(([a, b]) => `${a}--${b}`);
 
     const net = wireNetwork({
       nodes, edges,
@@ -658,11 +678,34 @@ async function expF() {
       }
     };
 
-    // Run 200 packets per run originating from source node 'src'
+    // Run 200 packets per run originating from source node 'src'.
+    // Flood + dropRate 0 is deterministic given the graph, so packet 0's
+    // delivery paths are the paths used for the whole run.
+    const pathSample = [];
+    const offPaths = net.onEvent((e) => {
+      if (e.type === 'BRIDGE_REACHED') pathSample.push(e.path.join('>'));
+    });
     for (let p = 0; p < PACKETS_PER_RUN; p++) {
       clock.reset(0);
       const packet = makePacket(rng);
       await net.propagatePacket('src', packet);
+      if (p === 0) offPaths();
+    }
+    const uniquePaths = [...new Set(pathSample)];
+    const usedOnPath = new Set(uniquePaths.flatMap((p) => p.split('>')));
+    const neverOnDelivery = nodes
+      .map((n) => n.id)
+      .filter((id) => id !== 'src' && !usedOnPath.has(id));
+
+    if (run === 0) {
+      console.log(`  seed ${seed} topology (${edgeList.length} edges):`);
+      console.log(`    ${edgeList.join(', ')}`);
+      console.log(`  delivery paths (packet 0, ${uniquePaths.length} unique):`);
+      for (const pth of uniquePaths) console.log(`    ${pth}`);
+      console.log(
+        `  never on a delivery path (stay at init ${INITIAL_TRUST}): ` +
+        (neverOnDelivery.join(', ') || '(none)')
+      );
     }
 
     const snap           = trustManager.snapshot();
@@ -708,14 +751,17 @@ async function expF() {
       maliciousScore: parseFloat(maliciousScore.toFixed(3)),
       minHonestScore: parseFloat(minHonest.toFixed(3)),
       separated,
+      topologyEdges: edgeList,
+      deliveryPaths: uniquePaths,
+      neverOnDeliveryPath: neverOnDelivery,
       honestScores: Object.fromEntries(
         honestIds.map((id) => [id, parseFloat((snap[id]?.score ?? INITIAL_TRUST).toFixed(3))])
       ),
-      perNodeTable: run === 0 ? perNodeTable : undefined,
+      perNodeTable,
     });
 
     console.log(
-      `  run ${run}: malicious=${maliciousScore.toFixed(1)} ` +
+      `  run ${run} seed=${seed} edges=${edgeList.length}: malicious=${maliciousScore.toFixed(1)} ` +
       `minHonest=${minHonest.toFixed(1)} separated=${separated}`
     );
   }
@@ -725,9 +771,9 @@ async function expF() {
   console.log(`\n  Oracle-free blame: malicious separated from honest in ${sepCount}/${results.length} runs`);
   if (sepCount < results.length) {
     console.log(
-      '  ⚠  Uniform blame causes innocent downstream relays (e.g., node-1) on the same path\n' +
-      '     as the malicious node to absorb false blame, so strict separation below ALL honest\n' +
-      '     nodes does not always occur, though the contaminated subpath isolates from honest nodes.'
+      '  ⚠  Uniform path blame penalises every relay on a tampered delivery, including honest\n' +
+      '     relays that only forwarded the tampered ciphertext. That is a false positive, not\n' +
+      '     isolation of a contaminated branch.'
     );
   }
 
@@ -742,70 +788,82 @@ async function main() {
   console.log('  All randomness seeded; simulated time; no Math.random()');
   console.log('═══════════════════════════════════════════════════════════════');
 
+  const onlyArg = process.argv.find((a) => a.startsWith('--only='));
+  const only = onlyArg ? onlyArg.split('=')[1] : null;
   const allResults = {};
 
-  allResults.a = await expA();
-  allResults.b = await expB();
-  allResults.c = await expC();
-  allResults.d = await expD();
-  allResults.e = await expE();
-  allResults.f = await expF();
+  if (!only || only === 'a') allResults.a = await expA();
+  if (!only || only === 'b') allResults.b = await expB();
+  if (!only || only === 'c') allResults.c = await expC();
+  if (!only || only === 'd') allResults.d = await expD();
+  if (!only || only === 'e') allResults.e = await expE();
+  if (!only || only === 'f') allResults.f = await expF();
+  if (!only || only === 'g') {
+    // expG is appended by later tasks; ignore unknown until it exists
+    if (typeof expG === 'function') allResults.g = await expG();
+  }
 
   // Write per-experiment JSON and CSV
   const csvFiles = {};
 
-  // exp_a.csv
-  let csvA = 'run,seed,packets,minTrust,isFlagged,riskScore\n';
-  for (const r of allResults.a) {
-    csvA += `${r.run},${r.seed},${r.packets},${r.fraud.minTrust.toFixed(2)},${r.fraud.isFlagged},${r.fraud.riskScore}\n`;
-  }
-  csvFiles.a = csvA;
-
-  // exp_b.csv
-  let csvB = 'run,seed,mode,deliveryRate,delivered,dropped,tampered,overhead,deliveryTimeMs\n';
-  for (const r of allResults.b) {
-    csvB += `${r.run},${r.seed},flood,${r.flood.deliveryRate.toFixed(2)},${r.flood.delivered},${r.flood.dropped},${r.flood.tampered},${r.flood.overhead.toFixed(2)},${r.flood.deliveryTimeMs ?? 0}\n`;
-    csvB += `${r.run},${r.seed},trust-aware,${r.trustAware.deliveryRate.toFixed(2)},${r.trustAware.delivered},${r.trustAware.dropped},${r.trustAware.tampered},${r.trustAware.overhead.toFixed(2)},${r.trustAware.deliveryTimeMs ?? 0}\n`;
-  }
-  csvFiles.b = csvB;
-
-  // exp_c.csv
-  let csvC = 'dropRate,run,seed,deliveryRate,delivered,dropped,overhead\n';
-  for (const group of allResults.c) {
-    for (const r of group.runs) {
-      csvC += `${group.dropRate},${r.run},${r.seed},${r.deliveryRate.toFixed(2)},${r.delivered},${r.dropped},${r.overhead.toFixed(2)}\n`;
+  if (allResults.a) {
+    let csvA = 'run,seed,packets,minTrust,isFlagged,riskScore\n';
+    for (const r of allResults.a) {
+      csvA += `${r.run},${r.seed},${r.packets},${r.fraud.minTrust.toFixed(2)},${r.fraud.isFlagged},${r.fraud.riskScore}\n`;
     }
+    csvFiles.a = csvA;
   }
-  csvFiles.c = csvC;
 
-  // exp_d.csv
-  let csvD = 'nodeCount,run,seed,deliveryRate,hops,overhead,deliveryTimeMs\n';
-  for (const group of allResults.d) {
-    for (const r of group.runs) {
-      csvD += `${group.nodeCount},${r.run},${r.seed},${r.deliveryRate.toFixed(2)},${r.hops},${r.overhead.toFixed(2)},${r.deliveryTimeMs ?? 0}\n`;
+  if (allResults.b) {
+    let csvB = 'run,seed,mode,deliveryRate,delivered,dropped,tampered,overhead,deliveryTimeMs\n';
+    for (const r of allResults.b) {
+      csvB += `${r.run},${r.seed},flood,${r.flood.deliveryRate.toFixed(2)},${r.flood.delivered},${r.flood.dropped},${r.flood.tampered},${r.flood.overhead.toFixed(2)},${r.flood.deliveryTimeMs ?? 0}\n`;
+      csvB += `${r.run},${r.seed},trust-aware,${r.trustAware.deliveryRate.toFixed(2)},${r.trustAware.delivered},${r.trustAware.dropped},${r.trustAware.tampered},${r.trustAware.overhead.toFixed(2)},${r.trustAware.deliveryTimeMs ?? 0}\n`;
     }
+    csvFiles.b = csvB;
   }
-  csvFiles.d = csvD;
 
-  // exp_e.csv
-  let csvE = 'type,run,seed,tamperedCount,isFlagged,firstDeliveries,replayDeliveries,bothReached\n';
-  for (const r of allResults.e.tamper) {
-    csvE += `tamper,${r.run},${r.seed},${r.tamperedCount},${r.fraud.isFlagged},,,\n`;
+  if (allResults.c) {
+    let csvC = 'dropRate,run,seed,deliveryRate,delivered,dropped,overhead\n';
+    for (const group of allResults.c) {
+      for (const r of group.runs) {
+        csvC += `${group.dropRate},${r.run},${r.seed},${r.deliveryRate.toFixed(2)},${r.delivered},${r.dropped},${r.overhead.toFixed(2)}\n`;
+      }
+    }
+    csvFiles.c = csvC;
   }
-  for (const r of allResults.e.replay) {
-    csvE += `replay,${r.run},${r.seed},,,${r.firstDeliveries},${r.replayDeliveries},\n`;
-  }
-  for (const r of allResults.e.duplicate) {
-    csvE += `duplicate,${r.run},${r.seed},,,,${r.deliveriesFromSrc1},${r.bothReached}\n`;
-  }
-  csvFiles.e = csvE;
 
-  // exp_f.csv
-  let csvF = 'run,seed,maliciousId,maliciousScore,minHonestScore,separated\n';
-  for (const r of allResults.f) {
-    csvF += `${r.run},${r.seed},${r.maliciousId},${r.maliciousScore},${r.minHonestScore},${r.separated}\n`;
+  if (allResults.d) {
+    let csvD = 'nodeCount,run,seed,deliveryRate,hops,overhead,deliveryTimeMs\n';
+    for (const group of allResults.d) {
+      for (const r of group.runs) {
+        csvD += `${group.nodeCount},${r.run},${r.seed},${r.deliveryRate.toFixed(2)},${r.hops},${r.overhead.toFixed(2)},${r.deliveryTimeMs ?? 0}\n`;
+      }
+    }
+    csvFiles.d = csvD;
   }
-  csvFiles.f = csvF;
+
+  if (allResults.e) {
+    let csvE = 'type,run,seed,tamperedCount,isFlagged,firstDeliveries,replayDeliveries,bothReached\n';
+    for (const r of allResults.e.tamper) {
+      csvE += `tamper,${r.run},${r.seed},${r.tamperedCount},${r.fraud.isFlagged},,,\n`;
+    }
+    for (const r of allResults.e.replay) {
+      csvE += `replay,${r.run},${r.seed},,,${r.firstDeliveries},${r.replayDeliveries},\n`;
+    }
+    for (const r of allResults.e.duplicate) {
+      csvE += `duplicate,${r.run},${r.seed},,,,${r.deliveriesFromSrc1},${r.bothReached}\n`;
+    }
+    csvFiles.e = csvE;
+  }
+
+  if (allResults.f) {
+    let csvF = 'run,seed,maliciousId,maliciousScore,minHonestScore,separated,edges\n';
+    for (const r of allResults.f) {
+      csvF += `${r.run},${r.seed},${r.maliciousId},${r.maliciousScore},${r.minHonestScore},${r.separated},${r.topologyEdges.length}\n`;
+    }
+    csvFiles.f = csvF;
+  }
 
   // Target directories to mirror (simulator results, mern/results, and root results)
   const targetDirs = [
@@ -839,9 +897,12 @@ async function main() {
     note: 'Seeds: a–e: runIndex*1000+expIndex (a=0…e=4); f: runIndex*1000+5',
   }, null, 2);
 
-  for (const dir of targetDirs) {
-    if (fs.existsSync(dir)) {
-      fs.writeFileSync(path.join(dir, 'summary.json'), summaryPayload, 'utf8');
+  // --only must not wipe the combined summary of experiments that were not rerun.
+  if (!only) {
+    for (const dir of targetDirs) {
+      if (fs.existsSync(dir)) {
+        fs.writeFileSync(path.join(dir, 'summary.json'), summaryPayload, 'utf8');
+      }
     }
   }
 
