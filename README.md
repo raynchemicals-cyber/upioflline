@@ -76,3 +76,7 @@ These two stores are decoupled by design: mobile phones in an offline mesh canno
 | **Reimplemented Exp E Checks** | Mock re-entry cache in simulator | Live `BridgeIngestionService` freshness window check with synchronized hardware clocks |
 | **Demo Key Management** | Ephemeral RSA keypairs generated on server start | Hardware Security Modules (HSM) / Android Keystore StrongBox backed keys |
 | **Settlement Rails** | Virtual MongoDB double-entry balance ledger | NPCI UPI Switch and Core Banking System (CBS) ISO 8583 / 20022 settlement APIs |
+| **Exp G Accusation Integrity** | Assumes accusations cannot be forged; links are authenticated (relay cannot spoof `from` field) | Mutual authentication on each BLE link; signed accusation messages with their own key pairs |
+| **Exp G Silent Drops** | A silently-dropping relay evades signature checks; drop detection uses simulator ground truth (`behaviourProfile`) | Hop-by-hop ACK + receipt timeout; drop blame would require a separate ACK-signing layer |
+| **Exp G Key Distribution** | Key registry is a global in-process singleton; revocation not modelled | PKI with certificate revocation lists (CRL) or OCSP; device-local key attestation via TEE |
+| **Blame / Drop Attribution (Exp A–G)** | Silent drops and path contamination blame use simulator ground truth (`behaviourProfile`, `shouldDrop()`, `shouldTamper()`) | Only signature-based blame (Exp G) is achievable without ground truth in a real deployment |

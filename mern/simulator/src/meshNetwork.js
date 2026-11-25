@@ -68,6 +68,10 @@ export class MeshNetwork {
    * @param {SimulatedClock} [opts.clock]                Shared simulated clock (injected)
    * @param {() => number} [opts.rng]                    Seeded PRNG (injected)
    * @param {boolean}      [opts.useRealTime=false]       true = real setTimeout (dashboard mode)
+   * @param {(packet: object) => boolean} [opts.verifySignature]
+   *   When set, each relay checks the sender signature over the ciphertext
+   *   without decrypting. A failure drops the packet and applies `tamper`
+   *   to the previous hop only. Ground-truth path blame is then skipped.
    */
   constructor({
     dropRate          = 0.0,
@@ -81,6 +85,7 @@ export class MeshNetwork {
     clock,
     rng,
     useRealTime       = false,
+    verifySignature   = null,
   } = {}) {
     this.dropRate          = dropRate;
     this.hopDelayMs        = hopDelayMs;
@@ -90,6 +95,7 @@ export class MeshNetwork {
     this.minTrustThreshold = minTrustThreshold;
     this.maxNextHops       = maxNextHops;
     this.useRealTime       = useRealTime;
+    this.verifySignature   = verifySignature;
 
     // Shared objects — created here if not injected (dashboard mode)
     this.trustManager = trustManager || new TrustManager();
@@ -275,6 +281,25 @@ export class MeshNetwork {
       const currentNode = this.nodes.get(currentId);
       if (!currentNode) continue;
 
+      // ── Signed-hop verification (no decryption) ────────────────────────────
+      // The sender signed the ciphertext hash. A relay that sees a mismatch
+      // drops the packet and penalises only the previous hop.
+      if (this.verifySignature && path.length > 1) {
+        let valid = false;
+        try { valid = this.verifySignature(currentPacket) === true; } catch { valid = false; }
+        if (!valid) {
+          const previousHop = path[path.length - 2];
+          this.trustManager.update(previousHop, 'tamper');
+          this.emit({
+            type:        'SIG_REJECTED',
+            nodeId:      currentId,
+            previousHop,
+            packetId:    currentPacket.packetId,
+          });
+          continue;
+        }
+      }
+
       // ── Simulated hop delay ─────────────────────────────────────────────────
       if (this.hopDelayMs > 0 && hopCount > 0) {
         const delay = this.hopDelayMs * currentNode.delayMultiplier;
@@ -392,7 +417,7 @@ export class MeshNetwork {
    *
    * @private
    */
-  _applyTrustUpdates(sourceId, bridgeDeliveries, droppedHops, tamperedNodes, originalCiphertext) {
+  _applyTrustUpdates(sourceId, bridgeDeliveries, droppedHops, tamperedNodesIn, originalCiphertext) {
     // 1. Reward relays on verified delivery paths
     for (const delivery of bridgeDeliveries) {
       const isVerified = originalCiphertext ? delivery.packet.ciphertext === originalCiphertext : true;
@@ -415,7 +440,12 @@ export class MeshNetwork {
       }
     }
 
-    // 3. Blame attribution for tampered packets
+    // 3. Blame attribution for tampered packets.
+    // Signed-hop mode already penalised the previous hop at verification time
+    // and must not also apply ground-truth tamper / path_contaminated.
+    // NOTE: uses simulator ground truth (behaviourProfile === 'malicious') to
+    // identify the tamperer; this is documented in README "What's not real".
+    const tamperedNodes = this.verifySignature ? [] : tamperedNodesIn;
     for (const { tampererNodeId, path } of tamperedNodes) {
       // Direct tamperer: full penalty
       this.trustManager.update(tampererNodeId, 'tamper');

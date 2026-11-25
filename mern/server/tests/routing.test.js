@@ -241,36 +241,35 @@ describe('Routing — reproducibility with seeded PRNG', () => {
     expect(r1).toEqual(r2);
   });
 
-  it('two runs with different seeds may produce different results (non-trivial test)', async () => {
-    // With a malicious node and explorationProb > 0, different seeds affect delivery
-    async function oneRun(seed) {
-      const rng          = createSeededRng(seed);
-      const clock        = new SimulatedClock();
-      const trustManager = new TrustManager();
-      const net = new MeshNetwork({
-        dropRate: 0.3, hopDelayMs: 0, maxHops: 5,
-        routingMode: 'flood', trustManager, clock, rng, useRealTime: false,
-      });
-      net.nodes.clear();
-      const src    = new MeshNode({ id: 'src',    hasInternet: false });
-      const relay  = new MeshNode({ id: 'relay',  hasInternet: false });
-      const bridge = new MeshNode({ id: 'bridge', hasInternet: true  });
-      net.nodes.set('src',    src);
-      net.nodes.set('relay',  relay);
-      net.nodes.set('bridge', bridge);
-      net.connect('src', 'relay');
-      net.connect('relay', 'bridge');
-      return net.propagatePacket('src', makeDummyPacket());
+  it('two different seeds produce a different topology (edge set)', () => {
+    // Build a topology with 10 nodes; seeded cross-links produce distinct graphs.
+    // Different seeds MUST yield different edge fingerprints.
+    function buildEdgeFingerprint(seed) {
+      const rng = createSeededRng(seed);
+      const nodeIds = ['src', 'n0', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7', 'bridge'];
+      const peers = new Map(nodeIds.map((id) => [id, new Set()]));
+      function connect(a, b) { peers.get(a).add(b); peers.get(b).add(a); }
+
+      // Chain
+      for (let i = 0; i < nodeIds.length - 1; i++) connect(nodeIds[i], nodeIds[i + 1]);
+      // Seeded cross-links
+      for (let i = 0; i < nodeIds.length; i++) {
+        for (const skip of [2, 3]) {
+          const j = i + skip;
+          if (j < nodeIds.length && rng() < 0.5) connect(nodeIds[i], nodeIds[j]);
+        }
+      }
+
+      const edges = new Set();
+      for (const [id, peerSet] of peers) {
+        for (const p of peerSet) edges.add([id, p].sort().join('--'));
+      }
+      return [...edges].sort().join(',');
     }
 
-    // Run enough seeds to find at least one difference
-    const results = await Promise.all([0, 1, 2, 3, 4].map(oneRun));
-    const counts  = results.map((r) => r.length);
-    // At 30% drop rate, we expect at least one run to differ from another
-    // (not all identical). This is probabilistic but seeded, so deterministic.
-    const unique  = new Set(counts);
-    // Accept if all delivered (all seeds produce 1) — still verifies no crash
-    expect(counts.length).toBe(5);
+    const fpA = buildEdgeFingerprint(1000);
+    const fpB = buildEdgeFingerprint(2000);
+    expect(fpA).not.toEqual(fpB);
   });
 });
 

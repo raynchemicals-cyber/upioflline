@@ -175,9 +175,10 @@ function buildTopology(nodeCount, profiles = [], dropRate = 0, rng = null) {
  * @param {TrustManager}   opts.trustManager
  * @param {SimulatedClock} opts.clock
  * @param {() => number}   opts.rng
+ * @param {(packet: object) => boolean} [opts.verifySignature]
  * @returns {MeshNetwork}
  */
-function wireNetwork({ nodes, edges, routingMode, networkDropRate, trustManager, clock, rng }) {
+function wireNetwork({ nodes, edges, routingMode, networkDropRate, trustManager, clock, rng, verifySignature = null }) {
   const net = new MeshNetwork({
     dropRate:   networkDropRate,
     hopDelayMs: HOP_DELAY_MS,
@@ -187,6 +188,7 @@ function wireNetwork({ nodes, edges, routingMode, networkDropRate, trustManager,
     clock,
     rng,
     useRealTime: false,
+    verifySignature,
   });
 
   // Replace the default topology with ours
@@ -780,6 +782,263 @@ async function expF() {
   return results;
 }
 
+// ─── Experiment G: Signed hop verification ───────────────────────────────────
+//
+// Each packet carries an RSA signature over SHA-256(ciphertext), made with the
+// sender's private key. Relays verify with the public key and never decrypt.
+// A malicious relay can flip ciphertext bytes but cannot re-sign. The next hop
+// drops the packet and applies tamper (−35) to the previous hop only.
+//
+// ASSUMPTIONS (documented in RESULTS.md "What's not real"):
+//   • Authenticated links: a relay cannot spoof the "from" field, so accusations
+//     cannot be forged (a malicious node only tampers ciphertext, not headers).
+//   • Key distribution and revocation are NOT modelled. The registry is global.
+//   • A silently-dropping relay EVADES signature checks (drop ≠ tamper).
+//     Silent drops are detected via a separate path using simulator ground truth
+//     (the behaviourProfile field), labelled accordingly in results.
+//   • Blame for drops in all experiments (A–G) uses simulator ground truth.
+//
+// Variants:
+//   ga  — CONTROL: 0 malicious relays  (expect 0 honest nodes classified MALICIOUS)
+//   gb  — 10 nodes, 1 malicious relay  (primary result; full per-node table printed)
+//   gc  — 10 nodes, 2 malicious relays
+//   gb_modes — Exp Gb repeated with flood vs trust-aware routing (delivery + overhead)
+//
+// Each variant: 200 packets × 5 seeds.
+// Metrics per run: malicious trust, min honest trust, false positives (honest → MALICIOUS),
+//   false negatives (malicious classified HONEST), delivery rate, mean hops, delay ms,
+//   sig-verify overhead (verifications per delivered packet).
+
+let expGKeys = null;
+function senderKeys() {
+  if (!expGKeys) {
+    expGKeys = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  }
+  return expGKeys;
+}
+
+/** RSA signature over the SHA-256 hash of the ciphertext. */
+function signCiphertext(ciphertext) {
+  const hash = crypto.createHash('sha256').update(Buffer.from(ciphertext)).digest();
+  return crypto.createSign('RSA-SHA256').update(hash).end().sign(senderKeys().privateKey).toString('base64');
+}
+
+/** Public-key check only. Returns false if the ciphertext was altered. */
+function verifyCiphertextSig(packet) {
+  if (!packet?.senderSig || packet.ciphertext == null) return false;
+  const hash = crypto.createHash('sha256').update(Buffer.from(packet.ciphertext)).digest();
+  return crypto.createVerify('RSA-SHA256')
+    .update(hash)
+    .end()
+    .verify(senderKeys().publicKey, Buffer.from(packet.senderSig, 'base64'));
+}
+
+function makeSignedPacket(rng) {
+  const packet = makePacket(rng);
+  packet.senderSig = signCiphertext(packet.ciphertext);
+  return packet;
+}
+
+/**
+ * Run one Exp G variant (a single profile + routing mode combination).
+ *
+ * @param {object} opts
+ * @param {string[]} opts.profiles         Per-relay behaviour profiles
+ * @param {'flood'|'trust-aware'} opts.routingMode
+ * @param {number}  opts.seed
+ * @param {number}  [opts.packetsPerRun=200]
+ * @param {boolean} [opts.printTable=false]  Print per-node trust table
+ * @returns {Promise<object>}  Run metrics
+ */
+async function runExpGVariant({ profiles, routingMode, seed, packetsPerRun = 200, printTable = false }) {
+  const rng          = createSeededRng(seed);
+  const clock        = new SimulatedClock();
+  const trustManager = new TrustManager();
+  const { nodes, edges } = buildTopology(10, profiles, 0, rng);
+
+  const net = wireNetwork({
+    nodes, edges,
+    routingMode,
+    networkDropRate: 0,
+    trustManager,
+    clock,
+    rng,
+    verifySignature: verifyCiphertextSig,
+  });
+
+  const maliciousIds = nodes.filter((n) => n.behaviourProfile === 'malicious').map((n) => n.id);
+  const honestIds    = nodes
+    .filter((n) => n.behaviourProfile === 'honest' && !n.hasInternet && n.id !== 'src')
+    .map((n) => n.id);
+
+  let sigVerifications = 0;
+  let sigRejects = 0;
+  let totalDelivered = 0;
+  let totalHops = 0;
+  let totalDelayMs = 0;
+  let deliveredCount = 0;
+
+  // Count every relay-level verification call (once per packet hop after first)
+  const offSig = net.onEvent((e) => {
+    if (e.type === 'SIG_REJECTED') { sigRejects++; sigVerifications++; }
+    if (e.type === 'PACKET_HOP')   sigVerifications++;  // verification attempted each hop
+    if (e.type === 'BRIDGE_REACHED') {
+      totalDelivered++;
+      totalHops += e.hopCount;
+      totalDelayMs += e.deliveryTimeMs;
+      deliveredCount++;
+    }
+  });
+
+  for (let p = 0; p < packetsPerRun; p++) {
+    clock.reset(0);
+    await net.propagatePacket('src', makeSignedPacket(rng));
+  }
+  offSig();
+
+  const snap = trustManager.snapshot();
+
+  // Per-malicious trust
+  const maliciousScores = maliciousIds.map((id) => snap[id]?.score ?? INITIAL_TRUST);
+
+  // Per-honest trust
+  const honestScores = honestIds.map((id) => snap[id]?.score ?? INITIAL_TRUST);
+  const minHonest = honestScores.length > 0 ? Math.min(...honestScores) : INITIAL_TRUST;
+
+  // False positives: honest nodes classified MALICIOUS (trust < THRESHOLD_UNRELIABLE=40)
+  const falsePositives = honestIds.filter((id) => trustManager.classify(id) === 'MALICIOUS').length;
+
+  // False negatives: malicious nodes NOT classified MALICIOUS
+  const falseNegatives = maliciousIds.filter((id) => trustManager.classify(id) !== 'MALICIOUS').length;
+
+  const deliveryRate = deliveredCount / packetsPerRun;
+  const meanHops     = deliveredCount > 0 ? totalHops / deliveredCount : 0;
+  const meanDelayMs  = deliveredCount > 0 ? totalDelayMs / deliveredCount : 0;
+  const sigVerifyOverhead = deliveredCount > 0 ? sigVerifications / deliveredCount : sigVerifications;
+
+  const perNodeTable = Object.fromEntries(
+    nodes.map((n) => [
+      n.id,
+      {
+        label:          n.label,
+        profile:        n.behaviourProfile,
+        hasInternet:    n.hasInternet,
+        score:          parseFloat((snap[n.id]?.score ?? INITIAL_TRUST).toFixed(2)),
+        classification: trustManager.classify(n.id),
+      },
+    ])
+  );
+
+  if (printTable) {
+    console.log('\n  Per-node trust table (seed=' + seed + '):');
+    console.log('  -----------------------------------------------------------');
+    console.log('  Node ID   | Profile   | Internet | Score       | Class');
+    console.log('  -----------------------------------------------------------');
+    for (const [id, info] of Object.entries(perNodeTable)) {
+      console.log(
+        `  ${id.padEnd(9)} | ${info.profile.padEnd(9)} | ${String(info.hasInternet).padEnd(8)} | ` +
+        `${info.score.toFixed(2).padStart(11)} | ${info.classification}`
+      );
+    }
+    console.log('  -----------------------------------------------------------');
+  }
+
+  return {
+    seed,
+    routingMode,
+    maliciousScores: maliciousScores.map((s) => parseFloat(s.toFixed(3))),
+    minHonestScore:  parseFloat(minHonest.toFixed(3)),
+    falsePositives,
+    falseNegatives,
+    deliveryRate:    parseFloat(deliveryRate.toFixed(4)),
+    meanHops:        parseFloat(meanHops.toFixed(2)),
+    meanDelayMs:     parseFloat(meanDelayMs.toFixed(1)),
+    sigVerifyOverhead: parseFloat(sigVerifyOverhead.toFixed(2)),
+    sigRejects,
+    perNodeTable,
+  };
+}
+
+async function expG() {
+  console.log('\n══ Exp G: Signed-Hop Verification ══');
+  console.log('  Assumption: authenticated links — relay cannot spoof "from" field.');
+  console.log('  Silent drops evade sig-checks (separate ground-truth path).\n');
+
+  const PACKETS_PER_RUN = 200;
+  const EXP_IDX_G = 6; // seed = run*1000 + 6
+
+  const results = { ga: [], gb: [], gc: [], gb_modes: [] };
+
+  // ── Ga: CONTROL — 0 malicious ──────────────────────────────────────────────
+  console.log('  [Ga] Control: 0 malicious relays');
+  for (let run = 0; run < RUNS_PER_EXP; run++) {
+    const seed = run * 1000 + EXP_IDX_G;
+    const profiles = new Array(9).fill('honest');
+    const r = await runExpGVariant({ profiles, routingMode: 'flood', seed, packetsPerRun: PACKETS_PER_RUN });
+    results.ga.push({ run, ...r });
+    console.log(`    run ${run}: FP=${r.falsePositives} delivery=${r.deliveryRate.toFixed(2)} sigOverhead=${r.sigVerifyOverhead.toFixed(2)}`);
+  }
+
+  // ── Gb: 10 nodes, 1 malicious ──────────────────────────────────────────────
+  console.log('\n  [Gb] 10 nodes, 1 malicious relay');
+  for (let run = 0; run < RUNS_PER_EXP; run++) {
+    const seed = run * 1000 + EXP_IDX_G;
+    const profiles = ['malicious', 'honest', 'honest', 'honest', 'honest',
+                      'honest', 'honest', 'honest', 'honest'];
+    const printTable = (run === 0);
+    const r = await runExpGVariant({ profiles, routingMode: 'flood', seed, packetsPerRun: PACKETS_PER_RUN, printTable });
+    results.gb.push({ run, ...r });
+    console.log(
+      `    run ${run}: malicious=${r.maliciousScores[0]?.toFixed(1) ?? 'N/A'} ` +
+      `minHonest=${r.minHonestScore.toFixed(1)} FP=${r.falsePositives} FN=${r.falseNegatives} ` +
+      `delivery=${r.deliveryRate.toFixed(2)} hops=${r.meanHops.toFixed(1)} ` +
+      `delay=${r.meanDelayMs.toFixed(0)}ms sigOverhead=${r.sigVerifyOverhead.toFixed(2)}`
+    );
+  }
+
+  // ── Gc: 10 nodes, 2 malicious ──────────────────────────────────────────────
+  console.log('\n  [Gc] 10 nodes, 2 malicious relays');
+  for (let run = 0; run < RUNS_PER_EXP; run++) {
+    const seed = run * 1000 + EXP_IDX_G;
+    const profiles = ['malicious', 'malicious', 'honest', 'honest', 'honest',
+                      'honest', 'honest', 'honest', 'honest'];
+    const r = await runExpGVariant({ profiles, routingMode: 'flood', seed, packetsPerRun: PACKETS_PER_RUN });
+    results.gc.push({ run, ...r });
+    const minMal = Math.min(...r.maliciousScores);
+    console.log(
+      `    run ${run}: minMalicious=${minMal.toFixed(1)} ` +
+      `minHonest=${r.minHonestScore.toFixed(1)} FP=${r.falsePositives} FN=${r.falseNegatives} ` +
+      `delivery=${r.deliveryRate.toFixed(2)} hops=${r.meanHops.toFixed(1)} sigOverhead=${r.sigVerifyOverhead.toFixed(2)}`
+    );
+  }
+
+  // ── Gb routing mode comparison: flood vs trust-aware ───────────────────────
+  console.log('\n  [Gb routing] Flood vs Trust-Aware (1 malicious, 200 pkts × 5 seeds)');
+  for (let run = 0; run < RUNS_PER_EXP; run++) {
+    const seed = run * 1000 + EXP_IDX_G;
+    const profiles = ['malicious', 'honest', 'honest', 'honest', 'honest',
+                      'honest', 'honest', 'honest', 'honest'];
+
+    const rFlood = await runExpGVariant({ profiles, routingMode: 'flood',       seed, packetsPerRun: PACKETS_PER_RUN });
+    const rTA    = await runExpGVariant({ profiles, routingMode: 'trust-aware',  seed, packetsPerRun: PACKETS_PER_RUN });
+
+    results.gb_modes.push({ run, seed, flood: rFlood, trustAware: rTA });
+    console.log(
+      `    run ${run}: flood delivery=${rFlood.deliveryRate.toFixed(2)} overhead=${rFlood.sigVerifyOverhead.toFixed(2)}` +
+      ` | trust-aware delivery=${rTA.deliveryRate.toFixed(2)} overhead=${rTA.sigVerifyOverhead.toFixed(2)}`
+    );
+  }
+
+  // ── Summary ─────────────────────────────────────────────────────────────────
+  const gaFP = results.ga.reduce((s, r) => s + r.falsePositives, 0);
+  const gbFP = results.gb.reduce((s, r) => s + r.falsePositives, 0);
+  const gbFN = results.gb.reduce((s, r) => s + r.falseNegatives, 0);
+  console.log(`\n  Ga control: total honest classified MALICIOUS = ${gaFP} (expect 0)`);
+  console.log(`  Gb (1 mal): total FP=${gbFP} FN=${gbFN} across ${RUNS_PER_EXP} runs`);
+
+  return results;
+}
+
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -798,10 +1057,7 @@ async function main() {
   if (!only || only === 'd') allResults.d = await expD();
   if (!only || only === 'e') allResults.e = await expE();
   if (!only || only === 'f') allResults.f = await expF();
-  if (!only || only === 'g') {
-    // expG is appended by later tasks; ignore unknown until it exists
-    if (typeof expG === 'function') allResults.g = await expG();
-  }
+  if (!only || only === 'g') allResults.g = await expG();
 
   // Write per-experiment JSON and CSV
   const csvFiles = {};
@@ -865,6 +1121,25 @@ async function main() {
     csvFiles.f = csvF;
   }
 
+  if (allResults.g) {
+    const g = allResults.g;
+    let csvG = 'variant,run,seed,maliciousScore,minHonestScore,falsePositives,falseNegatives,deliveryRate,meanHops,meanDelayMs,sigVerifyOverhead,sigRejects\n';
+    for (const r of (g.ga || [])) {
+      csvG += `ga,${r.run},${r.seed},,${r.minHonestScore},${r.falsePositives},0,${r.deliveryRate},${r.meanHops},${r.meanDelayMs},${r.sigVerifyOverhead},${r.sigRejects}\n`;
+    }
+    for (const r of (g.gb || [])) {
+      csvG += `gb,${r.run},${r.seed},${r.maliciousScores[0] ?? ''},${r.minHonestScore},${r.falsePositives},${r.falseNegatives},${r.deliveryRate},${r.meanHops},${r.meanDelayMs},${r.sigVerifyOverhead},${r.sigRejects}\n`;
+    }
+    for (const r of (g.gc || [])) {
+      csvG += `gc,${r.run},${r.seed},${Math.min(...r.maliciousScores)},${r.minHonestScore},${r.falsePositives},${r.falseNegatives},${r.deliveryRate},${r.meanHops},${r.meanDelayMs},${r.sigVerifyOverhead},${r.sigRejects}\n`;
+    }
+    for (const r of (g.gb_modes || [])) {
+      csvG += `gb_flood,${r.run},${r.seed},${r.flood.maliciousScores[0] ?? ''},${r.flood.minHonestScore},${r.flood.falsePositives},${r.flood.falseNegatives},${r.flood.deliveryRate},${r.flood.meanHops},${r.flood.meanDelayMs},${r.flood.sigVerifyOverhead},${r.flood.sigRejects}\n`;
+      csvG += `gb_trust,${r.run},${r.seed},${r.trustAware.maliciousScores[0] ?? ''},${r.trustAware.minHonestScore},${r.trustAware.falsePositives},${r.trustAware.falseNegatives},${r.trustAware.deliveryRate},${r.trustAware.meanHops},${r.trustAware.meanDelayMs},${r.trustAware.sigVerifyOverhead},${r.trustAware.sigRejects}\n`;
+    }
+    csvFiles.g = csvG;
+  }
+
   // Target directories to mirror (simulator results, mern/results, and root results)
   const targetDirs = [
     RESULTS_DIR,
@@ -894,7 +1169,7 @@ async function main() {
   const summaryPayload = JSON.stringify({
     generated: new Date().toISOString(),
     experiments: Object.keys(allResults),
-    note: 'Seeds: a–e: runIndex*1000+expIndex (a=0…e=4); f: runIndex*1000+5',
+    note: 'Seeds: a–e: runIndex*1000+expIndex (a=0…e=4); f: runIndex*1000+5; g: runIndex*1000+6',
   }, null, 2);
 
   // --only must not wipe the combined summary of experiments that were not rerun.
