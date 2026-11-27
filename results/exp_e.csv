@@ -1,0 +1,16 @@
+type,run,seed,tamperedCount,isFlagged,firstDeliveries,replayDeliveries,bothReached
+tamper,0,4,1,false,,,
+tamper,1,1004,1,false,,,
+tamper,2,2004,1,false,,,
+tamper,3,3004,1,false,,,
+tamper,4,4004,1,false,,,
+replay,0,4,,,4,4,
+replay,1,1004,,,4,4,
+replay,2,2004,,,4,4,
+replay,3,3004,,,4,4,
+replay,4,4004,,,4,4,
+duplicate,0,4,,,,4,true
+duplicate,1,1004,,,,4,true
+duplicate,2,2004,,,,4,true
+duplicate,3,3004,,,,4,true
+duplicate,4,4004,,,,4,true

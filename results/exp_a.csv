@@ -1,0 +1,6 @@
+run,seed,packets,minTrust,isFlagged,riskScore
+0,0,3,64.25,true,27
+1,1000,3,64.25,true,27
+2,2000,3,64.25,true,27
+3,3000,3,64.25,true,27
+4,4000,3,64.25,true,27

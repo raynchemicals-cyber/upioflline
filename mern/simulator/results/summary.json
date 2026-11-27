@@ -1,0 +1,12 @@
+{
+  "generated": "2026-11-24T10:25:27.194Z",
+  "experiments": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f"
+  ],
+  "note": "Seeds: a–e: runIndex*1000+expIndex (a=0…e=4); f: runIndex*1000+5"
+}

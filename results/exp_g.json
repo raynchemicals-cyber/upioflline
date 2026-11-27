@@ -1,0 +1,2215 @@
+{
+  "ga": [
+    {
+      "run": 0,
+      "seed": 6,
+      "routingMode": "flood",
+      "maliciousScores": [],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 15,
+      "meanHops": 4.13,
+      "meanDelayMs": 16540,
+      "sigVerifyOverhead": 9,
+      "sigRejects": 0,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 1,
+      "seed": 1006,
+      "routingMode": "flood",
+      "maliciousScores": [],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 22,
+      "meanHops": 4.27,
+      "meanDelayMs": 19813.6,
+      "sigVerifyOverhead": 6.23,
+      "sigRejects": 0,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 2,
+      "seed": 2006,
+      "routingMode": "flood",
+      "maliciousScores": [],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 8,
+      "meanHops": 4.38,
+      "meanDelayMs": 9600,
+      "sigVerifyOverhead": 6.63,
+      "sigRejects": 0,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 3,
+      "seed": 3006,
+      "routingMode": "flood",
+      "maliciousScores": [],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 2,
+      "meanHops": 4.5,
+      "meanDelayMs": 2700,
+      "sigVerifyOverhead": 7,
+      "sigRejects": 0,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 4,
+      "seed": 4006,
+      "routingMode": "flood",
+      "maliciousScores": [],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 15,
+      "meanHops": 3.93,
+      "meanDelayMs": 11420,
+      "sigVerifyOverhead": 6.73,
+      "sigRejects": 0,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    }
+  ],
+  "gb": [
+    {
+      "run": 0,
+      "seed": 6,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 5,
+      "meanHops": 3.6,
+      "meanDelayMs": 7200,
+      "sigVerifyOverhead": 16.8,
+      "sigRejects": 1200,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 1,
+      "seed": 1006,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 19,
+      "meanHops": 4.21,
+      "meanDelayMs": 17684.2,
+      "sigVerifyOverhead": 6.53,
+      "sigRejects": 200,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 2,
+      "seed": 2006,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 1,
+      "meanHops": 4,
+      "meanDelayMs": 2100,
+      "sigVerifyOverhead": 24,
+      "sigRejects": 1200,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 3,
+      "seed": 3006,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 0,
+      "meanHops": 0,
+      "meanDelayMs": 0,
+      "sigVerifyOverhead": 1000,
+      "sigRejects": 400,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 4,
+      "seed": 4006,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 4,
+      "meanHops": 3.25,
+      "meanDelayMs": 3375,
+      "sigVerifyOverhead": 12,
+      "sigRejects": 600,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    }
+  ],
+  "gc": [
+    {
+      "run": 0,
+      "seed": 6,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0,
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 4,
+      "meanHops": 3.75,
+      "meanDelayMs": 6075,
+      "sigVerifyOverhead": 18.25,
+      "sigRejects": 1600,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 1,
+      "seed": 1006,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0,
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 12,
+      "meanHops": 4.08,
+      "meanDelayMs": 12150,
+      "sigVerifyOverhead": 7.42,
+      "sigRejects": 800,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 100,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 2,
+      "seed": 2006,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0,
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 0,
+      "meanHops": 0,
+      "meanDelayMs": 0,
+      "sigVerifyOverhead": 2400,
+      "sigRejects": 1000,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 3,
+      "seed": 3006,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0,
+        80
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "deliveryRate": 0,
+      "meanHops": 0,
+      "meanDelayMs": 0,
+      "sigVerifyOverhead": 1000,
+      "sigRejects": 400,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    },
+    {
+      "run": 4,
+      "seed": 4006,
+      "routingMode": "flood",
+      "maliciousScores": [
+        0,
+        0
+      ],
+      "minHonestScore": 80,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "deliveryRate": 0,
+      "meanHops": 0,
+      "meanDelayMs": 0,
+      "sigVerifyOverhead": 2400,
+      "sigRejects": 1000,
+      "perNodeTable": {
+        "src": {
+          "label": "Source",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-0": {
+          "label": "Relay-0",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-1": {
+          "label": "Relay-1",
+          "profile": "malicious",
+          "hasInternet": false,
+          "score": 0,
+          "classification": "MALICIOUS"
+        },
+        "node-2": {
+          "label": "Relay-2",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-3": {
+          "label": "Relay-3",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-4": {
+          "label": "Bridge-4",
+          "profile": "honest",
+          "hasInternet": true,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-5": {
+          "label": "Relay-5",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-6": {
+          "label": "Relay-6",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-7": {
+          "label": "Relay-7",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        },
+        "node-8": {
+          "label": "Relay-8",
+          "profile": "honest",
+          "hasInternet": false,
+          "score": 80,
+          "classification": "HONEST"
+        }
+      }
+    }
+  ],
+  "gb_modes": [
+    {
+      "run": 0,
+      "seed": 6,
+      "flood": {
+        "seed": 6,
+        "routingMode": "flood",
+        "maliciousScores": [
+          0
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 5,
+        "meanHops": 3.6,
+        "meanDelayMs": 7200,
+        "sigVerifyOverhead": 16.8,
+        "sigRejects": 1200,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      },
+      "trustAware": {
+        "seed": 6,
+        "routingMode": "trust-aware",
+        "maliciousScores": [
+          0
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 5,
+        "meanHops": 3.6,
+        "meanDelayMs": 5759.7,
+        "sigVerifyOverhead": 12.08,
+        "sigRejects": 306,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      }
+    },
+    {
+      "run": 1,
+      "seed": 1006,
+      "flood": {
+        "seed": 1006,
+        "routingMode": "flood",
+        "maliciousScores": [
+          0
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 19,
+        "meanHops": 4.21,
+        "meanDelayMs": 17684.2,
+        "sigVerifyOverhead": 6.53,
+        "sigRejects": 200,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      },
+      "trustAware": {
+        "seed": 1006,
+        "routingMode": "trust-aware",
+        "maliciousScores": [
+          3.366
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 14.15,
+        "meanHops": 4.16,
+        "meanDelayMs": 12714.2,
+        "sigVerifyOverhead": 6.86,
+        "sigRejects": 23,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 3.37,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 82.25,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      }
+    },
+    {
+      "run": 2,
+      "seed": 2006,
+      "flood": {
+        "seed": 2006,
+        "routingMode": "flood",
+        "maliciousScores": [
+          0
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 1,
+        "meanHops": 4,
+        "meanDelayMs": 2100,
+        "sigVerifyOverhead": 24,
+        "sigRejects": 1200,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      },
+      "trustAware": {
+        "seed": 2006,
+        "routingMode": "trust-aware",
+        "maliciousScores": [
+          0
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 1,
+        "meanHops": 4,
+        "meanDelayMs": 1288.5,
+        "sigVerifyOverhead": 9.7,
+        "sigRejects": 128,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      }
+    },
+    {
+      "run": 3,
+      "seed": 3006,
+      "flood": {
+        "seed": 3006,
+        "routingMode": "flood",
+        "maliciousScores": [
+          0
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 0,
+        "meanHops": 0,
+        "meanDelayMs": 0,
+        "sigVerifyOverhead": 1000,
+        "sigRejects": 400,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      },
+      "trustAware": {
+        "seed": 3006,
+        "routingMode": "trust-aware",
+        "maliciousScores": [
+          0
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 0,
+        "meanHops": 0,
+        "meanDelayMs": 0,
+        "sigVerifyOverhead": 1000,
+        "sigRejects": 400,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      }
+    },
+    {
+      "run": 4,
+      "seed": 4006,
+      "flood": {
+        "seed": 4006,
+        "routingMode": "flood",
+        "maliciousScores": [
+          0
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 4,
+        "meanHops": 3.25,
+        "meanDelayMs": 3375,
+        "sigVerifyOverhead": 12,
+        "sigRejects": 600,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      },
+      "trustAware": {
+        "seed": 4006,
+        "routingMode": "trust-aware",
+        "maliciousScores": [
+          0.005
+        ],
+        "minHonestScore": 80,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "deliveryRate": 4,
+        "meanHops": 3.25,
+        "meanDelayMs": 2982,
+        "sigVerifyOverhead": 8.35,
+        "sigRejects": 63,
+        "perNodeTable": {
+          "src": {
+            "label": "Source",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-0": {
+            "label": "Relay-0",
+            "profile": "malicious",
+            "hasInternet": false,
+            "score": 0.01,
+            "classification": "MALICIOUS"
+          },
+          "node-1": {
+            "label": "Relay-1",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-2": {
+            "label": "Relay-2",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-3": {
+            "label": "Relay-3",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-4": {
+            "label": "Bridge-4",
+            "profile": "honest",
+            "hasInternet": true,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-5": {
+            "label": "Relay-5",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 100,
+            "classification": "HONEST"
+          },
+          "node-6": {
+            "label": "Relay-6",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-7": {
+            "label": "Relay-7",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          },
+          "node-8": {
+            "label": "Relay-8",
+            "profile": "honest",
+            "hasInternet": false,
+            "score": 80,
+            "classification": "HONEST"
+          }
+        }
+      }
+    }
+  ]
+}

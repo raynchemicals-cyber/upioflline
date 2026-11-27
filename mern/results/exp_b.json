@@ -1,0 +1,122 @@
+[
+  {
+    "seed": 1,
+    "run": 0,
+    "flood": {
+      "deliveryRate": 1,
+      "delivered": 4,
+      "dropped": 2,
+      "tampered": 1,
+      "overhead": 5.75,
+      "deliveryTimeMs": 2700,
+      "fallbacks": 0,
+      "explores": 0
+    },
+    "trustAware": {
+      "deliveryRate": 1,
+      "delivered": 2,
+      "dropped": 2,
+      "tampered": 1,
+      "overhead": 10.5,
+      "deliveryTimeMs": 2700,
+      "fallbacks": 0,
+      "explores": 0
+    }
+  },
+  {
+    "seed": 1001,
+    "run": 1,
+    "flood": {
+      "deliveryRate": 1,
+      "delivered": 2,
+      "dropped": 1,
+      "tampered": 1,
+      "overhead": 10,
+      "deliveryTimeMs": 2400,
+      "fallbacks": 0,
+      "explores": 0
+    },
+    "trustAware": {
+      "deliveryRate": 1,
+      "delivered": 4,
+      "dropped": 1,
+      "tampered": 1,
+      "overhead": 6.25,
+      "deliveryTimeMs": 2100,
+      "fallbacks": 0,
+      "explores": 0
+    }
+  },
+  {
+    "seed": 2001,
+    "run": 2,
+    "flood": {
+      "deliveryRate": 1,
+      "delivered": 3,
+      "dropped": 2,
+      "tampered": 1,
+      "overhead": 5.666666666666667,
+      "deliveryTimeMs": 2100,
+      "fallbacks": 0,
+      "explores": 0
+    },
+    "trustAware": {
+      "deliveryRate": 1,
+      "delivered": 3,
+      "dropped": 1,
+      "tampered": 1,
+      "overhead": 7.333333333333333,
+      "deliveryTimeMs": 2400,
+      "fallbacks": 0,
+      "explores": 0
+    }
+  },
+  {
+    "seed": 3001,
+    "run": 3,
+    "flood": {
+      "deliveryRate": 1,
+      "delivered": 3,
+      "dropped": 3,
+      "tampered": 1,
+      "overhead": 6.666666666666667,
+      "deliveryTimeMs": 2100,
+      "fallbacks": 0,
+      "explores": 0
+    },
+    "trustAware": {
+      "deliveryRate": 1,
+      "delivered": 2,
+      "dropped": 4,
+      "tampered": 1,
+      "overhead": 8,
+      "deliveryTimeMs": 2400,
+      "fallbacks": 0,
+      "explores": 0
+    }
+  },
+  {
+    "seed": 4001,
+    "run": 4,
+    "flood": {
+      "deliveryRate": 1,
+      "delivered": 3,
+      "dropped": 3,
+      "tampered": 1,
+      "overhead": 6.333333333333333,
+      "deliveryTimeMs": 2100,
+      "fallbacks": 0,
+      "explores": 0
+    },
+    "trustAware": {
+      "deliveryRate": 1,
+      "delivered": 3,
+      "dropped": 2,
+      "tampered": 1,
+      "overhead": 6.333333333333333,
+      "deliveryTimeMs": 2400,
+      "fallbacks": 0,
+      "explores": 0
+    }
+  }
+]

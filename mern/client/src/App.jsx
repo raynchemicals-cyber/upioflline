@@ -7,6 +7,9 @@ import { RiskQueuePanel } from './components/RiskQueuePanel.jsx';
 import { DemoControls } from './components/DemoControls.jsx';
 import { AccountBalances } from './components/AccountBalances.jsx';
 import { ActivityLog } from './components/ActivityLog.jsx';
+import { TrustScorePanel } from './components/TrustScorePanel.jsx';
+import { LiveTrafficChart } from './components/LiveTrafficChart.jsx';
+import { ExperimentResultsView } from './components/ExperimentResultsView.jsx';
 
 export default function App() {
   const [accounts, setAccounts] = useState([]);
@@ -391,6 +394,9 @@ export default function App() {
         />
       </div>
 
+      {/* Live Traffic & Metrics Section */}
+      <LiveTrafficChart />
+
       {/* Grid Middle: Risk Queue + Accounts */}
       <div className="grid-middle">
         <RiskQueuePanel
@@ -405,8 +411,14 @@ export default function App() {
         />
       </div>
 
+      {/* Trust Registry Panel */}
+      <TrustScorePanel />
+
+      {/* Empirical Benchmark Comparison */}
+      <ExperimentResultsView />
+
       {/* Grid Bottom: Ledger + Activity Terminal */}
-      <div className="grid-bottom">
+      <div className="grid-bottom" style={{ marginTop: '16px' }}>
         <SettlementFeed transactions={transactions} />
         <ActivityLog logs={logs} />
       </div>

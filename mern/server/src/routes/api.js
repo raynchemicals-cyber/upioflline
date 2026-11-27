@@ -32,4 +32,14 @@ router.get('/transactions', apiController.listTransactions);
 router.get('/flagged', apiController.listFlagged);
 router.post('/flagged/:id/review', validateBody(reviewDecisionSchema), apiController.reviewFlagged);
 
+// Traffic & Security Metrics
+router.get('/metrics', apiController.getMetrics);
+router.get('/metrics/stream', apiController.getMetricsStream);
+
+// Relay Node Trust Table
+router.get('/relay-nodes', apiController.listRelayNodes);
+
+// Experiment Results
+router.get('/results/:id', apiController.getExperimentResult);
+
 export default router;
