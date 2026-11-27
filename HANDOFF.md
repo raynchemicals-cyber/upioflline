@@ -152,3 +152,9 @@ npm run build
 ## What's Next
 - Run `concurrency.and.pipeline.test.js` against a live local MongoDB instance.
 - Provide a `docker-compose.yml` to launch MongoDB, backend, simulator, and dashboard together with one command.
+
+---
+
+## Release
+- **2026-11-27:** Merged `feature/step2-trust-management` into `master` (`80e26f1`) and pushed `origin/master`.
+- **Remaining:** Run `concurrency.and.pipeline.test.js` outside the sandbox against MongoDB (`mongodb-memory-server` or local `mongod`) and add `docker-compose.yml`.
